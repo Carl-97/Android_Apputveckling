@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'se.miun.ordernow'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "se.miun.ordernow"
