@@ -9,31 +9,44 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyViewHolder> {
-    private List<String> tablesList = Arrays.asList("table 1", "table 2", "table 3", "table 4", "table 5", "table 6", "table 7");
-    public recyclerAdapter(ArrayList<String> tablesList){
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
+    private List<String> tablesList;
+    private RecyclerViewClickListner listner;
+    public RecyclerAdapter(List<String> tablesList, RecyclerViewClickListner listner){
         this.tablesList = tablesList;
+        this.listner = listner;
+
     }
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public interface RecyclerViewClickListner{
+        void onClick(View v, int position);
+
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
         private TextView tableNameText;
         public MyViewHolder(final View view){
             super(view);
+            view.setOnClickListener(this);
             tableNameText = view.findViewById(R.id.tableNameTextView);
         }
 
+        @Override
+        public void onClick(View view) {
+            listner.onClick(view, getAbsoluteAdapterPosition());
+        }
     }
     @NonNull
     @Override
-    public recyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.table_list_items, parent, false);
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull recyclerAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
         String name = tablesList.get(position);
         holder.tableNameText.setText(name);
 
