@@ -3,6 +3,7 @@ package se.miun.ordernow;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,12 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
-    private List<String> tablesList;
+    private List<String> menuNameList;
+
     private RecyclerViewClickListner listner;
     public RecyclerAdapter(List<String> tablesList, RecyclerViewClickListner listner){
-        this.tablesList = tablesList;
+        this.menuNameList = tablesList;
         this.listner = listner;
-
     }
     public interface RecyclerViewClickListner{
         void onClick(View v, int position);
@@ -25,11 +26,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView tableNameText;
+        private TextView menuName;
+        private Button editButton;
+        private Button addButton;
         public MyViewHolder(final View view){
             super(view);
             view.setOnClickListener(this);
-            tableNameText = view.findViewById(R.id.menu_item_name);
+            menuName = view.findViewById(R.id.menu_item_name);
+            editButton = view.findViewById(R.id.menu_edit_button);
+            addButton = view.findViewById(R.id.menu_add_button);
+
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int id = view.getId();
+                    System.out.println("Edit button clicked, with id: " + id);
+                    System.out.println("Tag is: " + view.getTag());
+                }
+            });
         }
 
         @Override
@@ -46,13 +60,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
-        String name = tablesList.get(position);
-        holder.tableNameText.setText(name);
-
+        String name = menuNameList.get(position);
+        holder.menuName.setText(name);
+        // @TEST testing the Tag system.
+        holder.editButton.setTag(name);
     }
 
     @Override
     public int getItemCount() {
-        return tablesList.size();
+        return menuNameList.size();
     }
 }

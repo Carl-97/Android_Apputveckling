@@ -10,14 +10,37 @@
         android:id="@+id/simpleTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabBackground="@android:color/darker_gray"
-        app:tabIndicatorColor="#f00"
-        app:tabSelectedTextColor="#f00"
-        app:tabTextColor="#000" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabBackground="@color/purple_200"
+        app:tabIndicatorColor="#FFEB3B"
+        app:tabSelectedTextColor="#FFEB3B"
+        app:tabTextColor="#000">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/apetizerTab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Förrät" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/mainTab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Varmrätt" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/dessertTab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Efterätt" />
+    </com.google.android.material.tabs.TabLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/menuRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        app:layout_constraintTop_toBottomOf="@+id/simpleTabLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
