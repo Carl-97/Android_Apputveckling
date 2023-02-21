@@ -1,9 +1,14 @@
 package se.miun.ordernow;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,20 +33,49 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         private TextView menuName;
         private Button editButton;
-        private Button addButton;
+        private EditText editText;
+        public Button addButton;
         public MyViewHolder(final View view){
             super(view);
             view.setOnClickListener(this);
             menuName = view.findViewById(R.id.menu_item_name);
             editButton = view.findViewById(R.id.menu_edit_button);
             addButton = view.findViewById(R.id.menu_add_button);
+            editText = view.findViewById(R.id.menu_edit_text);
+
+
+
+            addButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    System.out.println("Order added: " + addButton.getTag());
+                    System.out.println("Description: " + editButton.getTag());
+                    editButton.setTag("");
+                    editText.setText("");
+                }
+            });
 
             editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    int id = view.getId();
-                    System.out.println("Edit button clicked, with id: " + id);
-                    System.out.println("Tag is: " + view.getTag());
+                public void onClick(View v) {
+                    editText.setVisibility(View.VISIBLE);
+
+                }
+            });
+
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    boolean handled = false;
+
+                    if (actionId == EditorInfo.IME_ACTION_SEND) {
+                        handled = true;
+
+                        String description = v.getText().toString();
+                        editButton.setTag(description);
+                        editText.setVisibility(View.GONE);
+                    }
+                    return handled;
                 }
             });
         }
@@ -50,6 +84,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         public void onClick(View view) {
             listner.onClick(view, getAbsoluteAdapterPosition());
         }
+
     }
     @NonNull
     @Override
@@ -62,8 +97,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
         String name = menuNameList.get(position);
         holder.menuName.setText(name);
-        // @TEST testing the Tag system.
-        holder.editButton.setTag(name);
+
+        // Bind the order name to the add button.
+        holder.addButton.setTag(name);
+        holder.editButton.setTag("");
     }
 
     @Override
