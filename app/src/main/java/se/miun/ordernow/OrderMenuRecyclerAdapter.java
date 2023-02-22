@@ -1,7 +1,5 @@
 package se.miun.ordernow;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
+public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecyclerAdapter.MyViewHolder> {
     private List<String> menuNameList;
 
+    private List<Order> orderList;
+
     private RecyclerViewClickListner listner;
-    public RecyclerAdapter(List<String> tablesList, RecyclerViewClickListner listner){
+    public OrderMenuRecyclerAdapter(List<String> tablesList, RecyclerViewClickListner listner){
         this.menuNameList = tablesList;
         this.listner = listner;
+    }
+
+    public void setOrderList(List<Order> list) {
+        orderList = list;
     }
     public interface RecyclerViewClickListner{
         void onClick(View v, int position);
@@ -48,6 +52,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Order.OrderType type = Order.OrderType.FÖRRÄTT;
+
+                    if(OrderMenu.currentType == 1) {
+                        type = Order.OrderType.VARMRÄTT;
+                    }
+                    else if(OrderMenu.currentType == 2) {
+                        type = Order.OrderType.EFTERÄTT;
+                    }
+                    orderList.add(new Order(addButton.getTag().toString(), type, editButton.getTag().toString()));
                     System.out.println("Order added: " + addButton.getTag());
                     System.out.println("Description: " + editButton.getTag());
                     editButton.setTag("");
@@ -88,13 +101,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     }
     @NonNull
     @Override
-    public RecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public OrderMenuRecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_menu_item, parent, false);
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull OrderMenuRecyclerAdapter.MyViewHolder holder, int position) {
         String name = menuNameList.get(position);
         holder.menuName.setText(name);
 

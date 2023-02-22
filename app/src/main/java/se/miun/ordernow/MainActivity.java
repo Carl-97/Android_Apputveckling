@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent switchActivity = new Intent(this, OrderMenu.class);
+        Intent switchActivity = new Intent(this, OrderStatus.class);
         startActivity(switchActivity);
     }
 }
