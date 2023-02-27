@@ -1,10 +1,12 @@
 package se.miun.ordernow;
 
+import android.content.Context;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -72,8 +74,10 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
             editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    editText.setVisibility(View.VISIBLE);
-
+                    if(editText.getVisibility() == View.VISIBLE)
+                        editText.setVisibility(View.GONE);
+                    else
+                        editText.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -88,6 +92,10 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
                         String description = v.getText().toString();
                         editButton.setTag(description);
                         editText.setVisibility(View.GONE);
+                        addButton.performClick();
+
+                        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     }
                     return handled;
                 }
@@ -121,4 +129,6 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
     public int getItemCount() {
         return menuNameList.size();
     }
+
+
 }

@@ -11,16 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabBackground="@color/purple_200"
-        app:tabIndicatorColor="#FFEB3B"
-        app:tabSelectedTextColor="#FFEB3B"
-        app:tabTextColor="#000">
+        app:tabBackground="@color/purple_500"
+        app:tabIndicatorColor="#FFFFFF"
+        app:tabSelectedTextColor="#FFFFFF"
+        app:tabTextColor="#000000">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/apetizerTab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Förrät" />
+            android:text="Förrätt" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/mainTab"
@@ -32,7 +32,7 @@
             android:id="@+id/dessertTab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Efterätt" />
+            android:text="Efterrätt" />
     </com.google.android.material.tabs.TabLayout>
 
 
@@ -52,6 +52,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:text="Done"
+        android:textColorHighlight="#57619A"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
