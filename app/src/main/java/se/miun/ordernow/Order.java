@@ -2,6 +2,8 @@ package se.miun.ordernow;
 
 
 public class Order {
+
+
     enum Status {
         HOLD, COOK, READY, DONE;
 
@@ -9,6 +11,10 @@ public class Order {
             if(ordinal() > values().length - 2)
                 return DONE;
             return values()[ordinal() + 1];
+        }
+
+        public boolean lessThan(Status status) {
+            return ordinal() < status.ordinal();
         }
     }
     enum OrderType {
@@ -32,6 +38,14 @@ public class Order {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public OrderType getType() {
+        return type;
+    }
+
+    public void setType(OrderType type) {
+        this.type = type;
     }
 
     public String getDescription() {

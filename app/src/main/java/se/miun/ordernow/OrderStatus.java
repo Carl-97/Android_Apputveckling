@@ -50,12 +50,8 @@ public class OrderStatus extends AppCompatActivity {
         readyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("List:");
-                for(int i = 0; i < orderList.size(); ++i) {
-                    System.out.println(orderList.get(i));
-                }
-                adapter = new OrderStatusRecyclerAdapter(orderList);
-                recyclerView.setAdapter(adapter);
+                listObject.updateState();
+                adapter.notifyDataSetChanged();
             }
         });
     }

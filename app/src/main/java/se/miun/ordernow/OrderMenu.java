@@ -31,7 +31,7 @@ public class OrderMenu extends AppCompatActivity {
     public static int currentType;
 
     private ArrayList<Order> orderList;
-    private Button tempButton;
+    private Button doneButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,31 @@ public class OrderMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_menu);
 
+
+        initRecyclerView();
+        initTabLayout();
+
+
+        OrderList listObject = new OrderList();
+        orderList = listObject.getList();
+
+        orderMenuRecyclerAdapter.setOrderList(orderList);
+        orderMenuRecyclerAdapter1.setOrderList(orderList);
+        orderMenuRecyclerAdapter2.setOrderList(orderList);
+
+        doneButton = findViewById(R.id.tempButton);
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentType = 0;
+                Intent switchActivity = new Intent(OrderMenu.this, OrderStatus.class);
+                startActivity(switchActivity);
+                //finish();
+            }
+        });
+    }
+
+    private void initRecyclerView() {
         listener = new OrderMenuRecyclerAdapter.RecyclerViewClickListner() {
             @Override
             public void onClick(View v, int position) {
@@ -54,7 +79,8 @@ public class OrderMenu extends AppCompatActivity {
         orderMenuRecyclerAdapter2 = new OrderMenuRecyclerAdapter(items2, listener);
         recyclerView.setAdapter(orderMenuRecyclerAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
-
+    }
+    private void initTabLayout() {
         tabLayout = findViewById(R.id.simpleTabLayout);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -85,24 +111,10 @@ public class OrderMenu extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        OrderList listObject = new OrderList();
-        orderList = listObject.getList();
-
-        orderMenuRecyclerAdapter.setOrderList(orderList);
-        orderMenuRecyclerAdapter1.setOrderList(orderList);
-        orderMenuRecyclerAdapter2.setOrderList(orderList);
-
-        tempButton = findViewById(R.id.tempButton);
-        tempButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent switchActivity = new Intent(OrderMenu.this, OrderStatus.class);
-                startActivity(switchActivity);
+                int pos = tab.getPosition();
+                currentType = pos;
             }
         });
     }
 }
+

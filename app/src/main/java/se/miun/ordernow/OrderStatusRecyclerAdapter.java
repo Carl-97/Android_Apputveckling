@@ -22,12 +22,14 @@ public class OrderStatusRecyclerAdapter extends RecyclerView.Adapter<OrderStatus
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView orderName;
+        private TextView orderType;
         private TextView orderStatus;
 
         public MyViewHolder(final View view){
             super(view);
 
             orderName = view.findViewById(R.id.orderName);
+            orderType = view.findViewById(R.id.orderType);
             orderStatus = view.findViewById(R.id.orderStatus);
         }
 
@@ -44,6 +46,8 @@ public class OrderStatusRecyclerAdapter extends RecyclerView.Adapter<OrderStatus
     public void onBindViewHolder(@NonNull OrderStatusRecyclerAdapter.MyViewHolder holder, int position) {
         Order order = orderList.get(position);
         holder.orderName.setText(order.getName());
+        String type = "" + order.getType().toString().charAt(0);
+        holder.orderType.setText(type);
         holder.orderStatus.setText(order.getStatus().toString());
     }
 

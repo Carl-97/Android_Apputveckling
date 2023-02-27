@@ -62,6 +62,7 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
                     }
                     orderList.add(new Order(addButton.getTag().toString(), type, editButton.getTag().toString()));
                     System.out.println("Order added: " + addButton.getTag());
+                    System.out.println("Type: " + type.toString());
                     System.out.println("Description: " + editButton.getTag());
                     editButton.setTag("");
                     editText.setText("");
