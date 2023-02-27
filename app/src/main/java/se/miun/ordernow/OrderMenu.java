@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -31,6 +32,7 @@ public class OrderMenu extends AppCompatActivity {
     public static int currentType;
 
     private ArrayList<Order> orderList;
+    private TextView orderCount;
     private Button doneButton;
 
     @Override
@@ -50,6 +52,14 @@ public class OrderMenu extends AppCompatActivity {
         orderMenuRecyclerAdapter.setOrderList(orderList);
         orderMenuRecyclerAdapter1.setOrderList(orderList);
         orderMenuRecyclerAdapter2.setOrderList(orderList);
+
+
+        orderCount = findViewById(R.id.numberOfOrders);
+        orderCount.setText("Order Count: " + orderList.size());
+
+        orderMenuRecyclerAdapter.setOrderCounter(orderCount);
+        orderMenuRecyclerAdapter1.setOrderCounter(orderCount);
+        orderMenuRecyclerAdapter2.setOrderCounter(orderCount);
 
         doneButton = findViewById(R.id.tempButton);
         doneButton.setOnClickListener(new View.OnClickListener() {

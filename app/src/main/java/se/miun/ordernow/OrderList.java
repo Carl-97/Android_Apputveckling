@@ -1,8 +1,7 @@
 package se.miun.ordernow;
 
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class OrderList {
     private static ArrayList<Order> list = new ArrayList<>();
@@ -13,39 +12,60 @@ public class OrderList {
     public ArrayList<Order> getList() {
         return list;
     }
+    public void addElement(Order element) {
+        if(list.size() == 0) {
+            list.add(element);
+            return;
+        }
+        int i = 0;
+        for (; i < list.size(); ++i) {
+            if(element.lessThan(list.get(i))) {
+                list.add(i, element);
+                return;
+            }
+        }
+        list.add(element);
+    }
 
     // Updates state by changing status for orders that are ready to done
     // And sends the next orders with the next ordertype to kitchen by changing status from hold to cook.
     public void updateState() {
-        Collections.sort(list, new Comparator<Order>() {
-            @Override
-            public int compare(Order lhs, Order rhs) {
-                int diff = lhs.getType().ordinal() - rhs.getType().ordinal();
-                if(diff > 1)
-                    diff = 1;
-                return diff;
-            }
-        });
         Order.OrderType currentType = Order.OrderType.FÖRRÄTT;
+        boolean updated = false;
         for(Order o: list) {
-            // Send orders to kitchen.
-            // ToDo: Change to switch-case, and fix that hold status will not be updated by button.
-            if(o.getStatus().lessThan(Order.Status.READY)) {
-                currentType = o.getType();
-                for(Order order: list) {
-                    if(order.getType().equals(currentType)) {
-                        order.setStatus(order.getStatus().next());
+            Order.Status currentStatus = o.getStatus();
+            switch(currentStatus) {
+                case HOLD:
+                case COOK: {
+                    // Send all hold orders of same type to kitchen
+                    currentType = o.getType();
+                    for(Order nextOrder: list) {
+                        if(nextOrder.getType().equals(currentType)) {
+                            nextOrder.nextStatus();
+                        }
                     }
+                    updated = true;
+                    break;
+                }// Wait for kitchen
+                case READY: {
+                    currentType = o.getType();
+                    for(Order nextOrder: list) {
+                        if(nextOrder.getType().equals(currentType)) {
+                            nextOrder.nextStatus();
+                        }
+                    }
+                    // When the main dishes have been delivered, desserts should not be sent to kitchen immidietly.
+                    if(currentType == Order.OrderType.VARMRÄTT) {
+                        updated = true;
+                    }
+                    break;
                 }
-                break;
+                case DONE: {
+                    // Do nothing.
+                }
             }
-            else if(o.getStatus().equals(Order.Status.READY)) {
-                currentType = o.getType();
-                for(Order order: list) {
-                    if(order.getType().equals(currentType)) {
-                        order.setStatus(order.getStatus().next());
-                    }
-                }
+            if(updated) {
+                break;
             }
         }
     }
@@ -56,11 +76,14 @@ public class OrderList {
         }
     }
 
-    private boolean hasApetizer() {
-        for(Order o: list) {
-            if(o.getStatus().equals(Order.OrderType.FÖRRÄTT))
-                return true;
+
+    public String getButtonState() {
+        for(Order order: list) {
+            if(order.getStatus() == Order.Status.DONE)
+                continue;
+            return buttonStateString[order.getType().ordinal() * 3 + order.getStatus().ordinal()];
         }
-        return false;
+        return "";
     }
+    public String[] buttonStateString = {"Send Apetizer", "Waiting for Apetizer", "Apetizer delivered", "Send Main", "Waiting for Main", "Main delivered", "Send Dessert", "Waiting for Dessert", "Dessert delivered"};
 }

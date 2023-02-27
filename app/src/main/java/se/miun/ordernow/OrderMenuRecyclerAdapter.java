@@ -20,6 +20,7 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
     private List<String> menuNameList;
 
     private List<Order> orderList;
+    private TextView orderCounter;
 
     private RecyclerViewClickListner listner;
     public OrderMenuRecyclerAdapter(List<String> tablesList, RecyclerViewClickListner listner){
@@ -29,6 +30,9 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
 
     public void setOrderList(List<Order> list) {
         orderList = list;
+    }
+    public void setOrderCounter(TextView view) {
+        orderCounter = view;
     }
     public interface RecyclerViewClickListner{
         void onClick(View v, int position);
@@ -50,7 +54,6 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
             editText = view.findViewById(R.id.menu_edit_text);
 
 
-
             addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -62,20 +65,32 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
                     else if(OrderMenu.currentType == 2) {
                         type = Order.OrderType.EFTERÄTT;
                     }
-                    orderList.add(new Order(addButton.getTag().toString(), type, editButton.getTag().toString()));
+                    //orderList.add(new Order(addButton.getTag().toString(), type, editButton.getTag().toString()));
+                    OrderList data = new OrderList();
+                    data.addElement(new Order(addButton.getTag().toString(), type, editText.getText().toString()));
                     System.out.println("Order added: " + addButton.getTag());
                     System.out.println("Type: " + type.toString());
-                    System.out.println("Description: " + editButton.getTag());
+                    System.out.println("Description: " + editText.getText());
                     editButton.setTag("");
                     editText.setText("");
+                    editText.setVisibility(View.GONE);
+                    // Closes keyboard after ActionSend.
+                    InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+                    orderCounter.setText("Order Count: " + orderList.size());
                 }
             });
 
             editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(editText.getVisibility() == View.VISIBLE)
+                    if(editText.getVisibility() == View.VISIBLE) {
                         editText.setVisibility(View.GONE);
+                        // Closes keyboard after ActionSend.
+                        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
                     else
                         editText.setVisibility(View.VISIBLE);
                 }
@@ -94,6 +109,7 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
                         editText.setVisibility(View.GONE);
                         addButton.performClick();
 
+                        // Closes keyboard after ActionSend.
                         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     }

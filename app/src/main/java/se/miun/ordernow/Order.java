@@ -62,6 +62,7 @@ public class Order {
     public void setStatus(Status status) {
         this.status = status;
     }
+    public void nextStatus() { this.status = this.status.next(); }
 
     public void progressStatus() {
         status = status.next();
@@ -69,5 +70,16 @@ public class Order {
 
     public String toString() {
         return name + " " + description;
+    }
+
+    public boolean lessThan(Order rhs) {
+        int difference = this.getType().ordinal() - rhs.getType().ordinal();
+        // If Type is the same, look at status.
+        if(difference == 0) {
+            difference = this.getStatus().ordinal() - rhs.getStatus().ordinal();
+        }
+        if(difference >= 0)
+            return false;
+        return true;
     }
 }
