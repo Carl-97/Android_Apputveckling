@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Order {
     private int orderNumber;
-    private List<Item> items;
+    private List<OrderItem> items;
     private Table table;
 
 
@@ -13,7 +13,7 @@ public class Order {
         return table;
     }
 
-    public Order(int orderNumber, List<Item> items, Table table) {
+    public Order(int orderNumber, List<OrderItem> items, Table table) {
         this.orderNumber = orderNumber;
         this.items = items;
         this.table = table;
@@ -27,11 +27,11 @@ public class Order {
         this.orderNumber = orderNumber;
     }
 
-    public List<Item> getItems() {
+    public List<OrderItem> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<OrderItem> items) {
         this.items = items;
     }
 }

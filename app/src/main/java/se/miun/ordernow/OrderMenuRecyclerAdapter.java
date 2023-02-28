@@ -57,22 +57,19 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
             addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Order.OrderType type = Order.OrderType.FÖRRÄTT;
+                    OrderItem.Type type = OrderItem.Type.FÖRRÄTT;
 
                     if(OrderMenu.currentType == 1) {
-                        type = Order.OrderType.VARMRÄTT;
+                        type = OrderItem.Type.VARMRÄTT;
                     }
                     else if(OrderMenu.currentType == 2) {
-                        type = Order.OrderType.EFTERÄTT;
+                        type = OrderItem.Type.EFTERÄTT;
                     }
-                    orderList.addElement(new Order(addButton.getTag().toString(), type, editText.getText().toString()));
-                    System.out.println("Order added: " + addButton.getTag());
-                    System.out.println("Type: " + type.toString());
-                    System.out.println("Description: " + editText.getText());
-                    editButton.setTag("");
+                    orderList.add(new OrderItem(addButton.getTag().toString(), type, editText.getText().toString()));
+
+                    // Reset editText view. And close keyboard after ActionSend.
                     editText.setText("");
                     editText.setVisibility(View.GONE);
-                    // Closes keyboard after ActionSend.
                     InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
@@ -103,7 +100,6 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
                         handled = true;
 
                         String description = v.getText().toString();
-                        editButton.setTag(description);
                         editText.setVisibility(View.GONE);
                         addButton.performClick();
 

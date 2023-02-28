@@ -5,13 +5,10 @@ import java.util.List;
 public class Table {
     private int tableNumber;
     private boolean tableStatus;
-    private List<Order> orders;
 
-    public Table(int tableNumber, boolean tableStatus, List<Order> orders) {
+    public Table(int tableNumber, boolean tableStatus) {
         this.tableNumber = tableNumber;
         this.tableStatus = tableStatus;
-        this.orders =orders;
-
     }
     public Table(int tableNumber) {
         this.tableNumber = tableNumber;
@@ -30,13 +27,5 @@ public class Table {
 
     public void setTableStatus(boolean tableStatus) {
         this.tableStatus = tableStatus;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
     }
 }

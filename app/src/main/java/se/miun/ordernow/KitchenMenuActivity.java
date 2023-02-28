@@ -23,12 +23,12 @@ public class KitchenMenuActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView_kitchenMenu);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ArrayList<Item> item = new ArrayList<Item>();
-        item.add(new Item("potatis", "utan potatis", "mayt"));
-        item.add(new Item("kött", "utan potatis", "mayt"));
-        item.add(new Item("morot   ", "utan potatis", "mayt"));
-        item.add(new Item("mos", "utan potatis", "mayt"));
-        item.add(new Item("godis", "utan potatis", "mayt"));
+        ArrayList<OrderItem> item = new ArrayList<OrderItem>();
+        item.add(new OrderItem("potatis", OrderItem.Type.VARMRÄTT, "mayt"));
+        item.add(new OrderItem("kött", OrderItem.Type.VARMRÄTT, "utan potatis"));
+        item.add(new OrderItem("morot   ", OrderItem.Type.FÖRRÄTT, "utan potatis"));
+        item.add(new OrderItem("mos", OrderItem.Type.VARMRÄTT, "utan potatis"));
+        item.add(new OrderItem("godis", OrderItem.Type.EFTERÄTT, "mayt"));
         Table table = new Table(1);
         orderList.add(new Order(01, item, table));
         orderList.add(new Order(02, item, table));

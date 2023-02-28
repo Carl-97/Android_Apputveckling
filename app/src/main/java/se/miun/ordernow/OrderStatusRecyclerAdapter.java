@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class OrderStatusRecyclerAdapter extends RecyclerView.Adapter<OrderStatusRecyclerAdapter.MyViewHolder> {
-    private List<Order> orderList;
+    private OrderList orderList;
 
 
-    public OrderStatusRecyclerAdapter(List<Order> tablesList){
+    public OrderStatusRecyclerAdapter(OrderList tablesList){
         this.orderList = tablesList;
     }
 
@@ -44,7 +44,7 @@ public class OrderStatusRecyclerAdapter extends RecyclerView.Adapter<OrderStatus
 
     @Override
     public void onBindViewHolder(@NonNull OrderStatusRecyclerAdapter.MyViewHolder holder, int position) {
-        Order order = orderList.get(position);
+        OrderItem order = orderList.get(position);
         holder.orderName.setText(order.getName());
         String type = "" + order.getType().toString().charAt(0);
         holder.orderType.setText(type);

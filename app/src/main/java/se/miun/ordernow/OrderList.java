@@ -4,16 +4,16 @@ package se.miun.ordernow;
 import java.util.ArrayList;
 
 public class OrderList {
-    private ArrayList<Order> list;
+    private ArrayList<OrderItem> list;
 
     public OrderList() {
         list = new ArrayList<>();
     }
 
-    public ArrayList<Order> getList() {
+    public ArrayList<OrderItem> getList() {
         return list;
     }
-    public void addElement(Order element) {
+    public void add(OrderItem element) {
         if(list.size() == 0) {
             list.add(element);
             return;
@@ -28,20 +28,24 @@ public class OrderList {
         list.add(element);
     }
 
+    public OrderItem get(int index) {
+        return list.get(index);
+    }
+
     // Updates state by changing status for orders that are ready to done
     // And sends the next orders with the next ordertype to kitchen by changing status from hold to cook.
     public void updateState() {
-        Order.OrderType currentType = Order.OrderType.FÖRRÄTT;
+        OrderItem.Type currentType = OrderItem.Type.FÖRRÄTT;
         boolean updated = false;
-        for(Order o: list) {
-            Order.Status currentStatus = o.getStatus();
+        for(OrderItem o: list) {
+            OrderItem.Status currentStatus = o.getStatus();
             switch(currentStatus) {
                 case HOLD:
                 case COOK: {
                     // Send all hold orders of same type to kitchen
                     currentType = o.getType();
-                    for(Order nextOrder: list) {
-                        if(nextOrder.getType().equals(currentType)) {
+                    for(OrderItem nextOrder: list) {
+                        if(nextOrder.getType().equals(currentType) && nextOrder.getStatus().equals(currentStatus)) {
                             nextOrder.nextStatus();
                         }
                     }
@@ -50,13 +54,13 @@ public class OrderList {
                 }// Wait for kitchen
                 case READY: {
                     currentType = o.getType();
-                    for(Order nextOrder: list) {
-                        if(nextOrder.getType().equals(currentType)) {
+                    for(OrderItem nextOrder: list) {
+                        if(nextOrder.getType().equals(currentType) && nextOrder.getStatus().equals(currentStatus)) {
                             nextOrder.nextStatus();
                         }
                     }
                     // When the main dishes have been delivered, desserts should not be sent to kitchen immidietly.
-                    if(currentType == Order.OrderType.VARMRÄTT) {
+                    if(currentType == OrderItem.Type.VARMRÄTT) {
                         updated = true;
                     }
                     break;
@@ -76,19 +80,8 @@ public class OrderList {
     }
 
     public void printList() {
-        for(Order o: list) {
+        for(OrderItem o: list) {
             System.out.println(o.toString());
         }
     }
-
-
-    public String getButtonState() {
-        for(Order order: list) {
-            if(order.getStatus() == Order.Status.DONE)
-                continue;
-            return buttonStateString[order.getType().ordinal() * 3 + order.getStatus().ordinal()];
-        }
-        return "";
-    }
-    public String[] buttonStateString = {"Send Apetizer", "Waiting for Apetizer", "Apetizer delivered", "Send Main", "Waiting for Main", "Main delivered", "Send Dessert", "Waiting for Dessert", "Dessert delivered"};
 }

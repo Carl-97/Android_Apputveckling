@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TableChoiceActivity extends AppCompatActivity {
@@ -20,6 +21,11 @@ public class TableChoiceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_table_layout);
+        // ToDo: Fetch from list instead of just creating "random" tables.
+        tableList = new ArrayList<>();
+        for(int i = 0; i < 8; ++i) {
+            tableList.add(new Table(i, false));
+        }
 
         displayItem();
     }
@@ -29,8 +35,9 @@ public class TableChoiceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v, int position) {
                 System.out.println("YeS! YOU CLICked!");
-                Intent intent =new Intent(getApplicationContext(),OrderMenu.class) ;
-                //startActivity(intent);  check with Mattias
+                Intent intent = new Intent(getApplicationContext(), OrderStatus.class);
+                intent.putExtra("tableNumber", position);
+                startActivity(intent);
                 //ToDo: check with Mattias
             }
         };

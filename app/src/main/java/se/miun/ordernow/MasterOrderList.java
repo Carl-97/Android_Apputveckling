@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class MasterOrderList {
     public static final int MAXIMUM_TABLES = 8;
-    private static ArrayList<OrderList> masterList = new ArrayList<>();
+    private static final ArrayList<OrderList> masterList = new ArrayList<>();
 
     public MasterOrderList() {
         if(masterList.size() != MAXIMUM_TABLES) {
@@ -18,5 +18,4 @@ public class MasterOrderList {
     public OrderList getOrderList(int tableIndex) {
         return masterList.get(tableIndex);
     }
-
 }

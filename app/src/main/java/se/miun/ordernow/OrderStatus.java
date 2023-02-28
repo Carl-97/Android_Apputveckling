@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class OrderStatus extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Button readyButton;
     private Button menuButton;
+    private TextView title;
 
     private OrderStatusRecyclerAdapter adapter;
 
@@ -29,65 +31,77 @@ public class OrderStatus extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_status);
+
+        Intent intent = getIntent();
+        tableNumber = intent.getIntExtra("tableNumber", 0);
+
         masterList = new MasterOrderList();
-        tableNumber = 4;
         OrderList currentTableOrderList = masterList.getOrderList(tableNumber);
 
         recyclerView = findViewById(R.id.orderList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this,1));
-        adapter = new OrderStatusRecyclerAdapter(currentTableOrderList.getList());
+        adapter = new OrderStatusRecyclerAdapter(currentTableOrderList);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+
+        title = findViewById(R.id.title);
+        title.setText("Table " + tableNumber + " Status");
 
         menuButton = findViewById(R.id.orderButton);
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent switchActivity = new Intent(OrderStatus.this, OrderMenu.class);
+                switchActivity.putExtra("tableNumber", tableNumber);
                 startActivity(switchActivity);
             }
         });
 
         readyButton = findViewById(R.id.readyButton);
-        String buttonText = currentTableOrderList.getButtonState();
+        setReadyButtonState();
 
+        readyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentTableOrderList.updateState();
+                adapter.notifyDataSetChanged();
+                setReadyButtonState();
+            }
+        });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        setReadyButtonState();
+
+        adapter.notifyDataSetChanged();
+    }
+
+    private void setReadyButtonState() {
+        String buttonText = getReadyButtonText();
+        readyButton.setText(buttonText);
+        if(buttonText.isEmpty()) {
+            readyButton.setVisibility(View.GONE);
+        }
+        else
+            readyButton.setVisibility(View.VISIBLE);
         if(buttonText.contains("Waiting")) {
             readyButton.setBackgroundColor(Color.GRAY);
         }
         else {
             readyButton.setBackgroundColor(Color.BLUE);
         }
-
-        if(buttonText.isEmpty()) {
-            readyButton.setVisibility(View.GONE);
-        }
-        else
-            readyButton.setVisibility(View.VISIBLE);
-
-
-
-        readyButton.setText(buttonText);
-        readyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentTableOrderList.updateState();
-                adapter.notifyDataSetChanged();
-                String buttonText = currentTableOrderList.getButtonState();
-                if(buttonText.isEmpty()) {
-                    readyButton.setVisibility(View.GONE);
-                }
-                else
-                    readyButton.setVisibility(View.VISIBLE);
-                if(buttonText.contains("Waiting")) {
-                    readyButton.setBackgroundColor(Color.GRAY);
-                }
-                else {
-                    readyButton.setBackgroundColor(Color.BLUE);
-                }
-                readyButton.setText(buttonText);
-            }
-        });
     }
 
+    private String getReadyButtonText() {
+        for(OrderItem order: masterList.getOrderList(tableNumber).getList()) {
+            if(order.getStatus() == OrderItem.Status.DONE)
+                continue;
+            return buttonStateString[order.getType().ordinal() * 3 + order.getStatus().ordinal()];
+        }
+        return "";
+    }
+    private String[] buttonStateString = {"Send Apetizer", "Waiting for Apetizer", "Apetizer delivered", "Send Main", "Waiting for Main", "Main delivered", "Send Dessert", "Waiting for Dessert", "Dessert delivered"};
 }

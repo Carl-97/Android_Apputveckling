@@ -12,16 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyViewHolder> {
-    private List<Item> itemList;
+    private List<OrderItem> itemList;
     private OrderItemAdapter.RecyclerViewClickListener listener;
 
-    public OrderItemAdapter(List<Item> itemList, OrderItemAdapter.RecyclerViewClickListener listener) {
+    public OrderItemAdapter(List<OrderItem> itemList, OrderItemAdapter.RecyclerViewClickListener listener) {
         this.itemList = itemList;
         this.listener = listener;
     }
-    public OrderItemAdapter(List<Item> itemList) {
+    public OrderItemAdapter(List<OrderItem> itemList) {
         this.itemList = itemList;
-
     }
     public interface RecyclerViewClickListener {
         void onClick(View v, int position);
@@ -63,13 +62,13 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull OrderItemAdapter.MyViewHolder holder, int position) {
-        String itemType = itemList.get(position).getItemType();
+        String itemType = itemList.get(position).getType().toString();
         holder.itemTypeName.setText("Type: " + itemType);
 
-        String itemName = itemList.get(position).getItemName();
+        String itemName = itemList.get(position).getName();
         holder.itemName.setText("Meal: " + itemName);
 
-        String itemDescription = itemList.get(position).getItemChanges();
+        String itemDescription = itemList.get(position).getDescription();
         holder.itemDescription.setText(itemDescription);
 
     }
