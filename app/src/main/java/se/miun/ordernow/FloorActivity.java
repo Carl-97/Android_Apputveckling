@@ -7,23 +7,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.EventListener;
-
-public class MainActivity extends AppCompatActivity {
+public class FloorActivity extends AppCompatActivity {
     Button chooseTableBTN;
     Button statusTableBTN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_floor);
         chooseTableBTN = (Button) findViewById(R.id.TableButton);
         statusTableBTN = (Button) findViewById(R.id.statusButton);
 
         chooseTableBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this ,TableChoiceActivity.class);
+                Intent intent = new Intent(FloorActivity.this ,TableChoiceActivity.class);
                 startActivity(intent);
 
             }

@@ -9,14 +9,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class TableChoiceActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    List<String> tableList = Arrays.asList("table 1", "table 2", "table 3", "table 4", "table 5", "table 6", "table 7");
+    List<Table> tableList; /*= Arrays.asList("table 1", "table 2", "table 3", "table 4", "table 5", "table 6", "table 7");*/
     private RecyclerAdapter recyclerAdapter;
-    private RecyclerAdapter.RecyclerViewClickListner listner;
+    private RecyclerAdapter.RecyclerViewClickListener listner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +25,7 @@ public class TableChoiceActivity extends AppCompatActivity {
     }
 
     private void displayItem() {
-        listner = new RecyclerAdapter.RecyclerViewClickListner() {
+        listner = new RecyclerAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
                 System.out.println("YeS! YOU CLICked!");

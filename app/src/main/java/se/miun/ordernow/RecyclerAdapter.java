@@ -8,18 +8,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
-    private List<String> tablesList;
-    private RecyclerViewClickListner listner;
-    public RecyclerAdapter(List<String> tablesList, RecyclerViewClickListner listner){
+    private List<Table> tablesList;
+    private RecyclerViewClickListener listener;
+    public RecyclerAdapter(List<Table> tablesList, RecyclerViewClickListener listener){
         this.tablesList = tablesList;
-        this.listner = listner;
+        this.listener = listener;
 
     }
-    public interface RecyclerViewClickListner{
+    public interface RecyclerViewClickListener {
         void onClick(View v, int position);
 
     }
@@ -35,7 +34,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         @Override
         public void onClick(View view) {
-            listner.onClick(view, getAbsoluteAdapterPosition());
+            listener.onClick(view, getAbsoluteAdapterPosition());
         }
     }
     @NonNull
@@ -47,7 +46,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
-        String name = tablesList.get(position);
+        String name = String.valueOf(tablesList.get(position).getTableNumber());
         holder.tableNameText.setText(name);
 
     }
