@@ -31,35 +31,25 @@ public class OrderMenu extends AppCompatActivity {
     private TabLayout tabLayout;
     public static int currentType;
 
-    private ArrayList<Order> orderList;
+    private MasterOrderList masterOrderList;
+    private int tableNumber = 4;
     private TextView orderCount;
     private Button doneButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        orderList = new ArrayList<>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_menu);
 
-
-        initRecyclerView();
-        initTabLayout();
-
-
-        OrderList listObject = new OrderList();
-        orderList = listObject.getList();
-
-        orderMenuRecyclerAdapter.setOrderList(orderList);
-        orderMenuRecyclerAdapter1.setOrderList(orderList);
-        orderMenuRecyclerAdapter2.setOrderList(orderList);
-
+        masterOrderList = new MasterOrderList();
+        OrderList currentTableOrderList = masterOrderList.getOrderList(tableNumber);
 
         orderCount = findViewById(R.id.numberOfOrders);
-        orderCount.setText("Order Count: " + orderList.size());
+        orderCount.setText("Order Count: " + currentTableOrderList.size());
 
-        orderMenuRecyclerAdapter.setOrderCounter(orderCount);
-        orderMenuRecyclerAdapter1.setOrderCounter(orderCount);
-        orderMenuRecyclerAdapter2.setOrderCounter(orderCount);
+        initRecyclerView(currentTableOrderList, orderCount);
+        initTabLayout();
+
 
         doneButton = findViewById(R.id.tempButton);
         doneButton.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +63,7 @@ public class OrderMenu extends AppCompatActivity {
         });
     }
 
-    private void initRecyclerView() {
+    private void initRecyclerView(OrderList orderList, TextView orderCountView) {
         listener = new OrderMenuRecyclerAdapter.RecyclerViewClickListner() {
             @Override
             public void onClick(View v, int position) {
@@ -89,6 +79,15 @@ public class OrderMenu extends AppCompatActivity {
         orderMenuRecyclerAdapter2 = new OrderMenuRecyclerAdapter(items2, listener);
         recyclerView.setAdapter(orderMenuRecyclerAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+
+        // Set orderList and orderCounter for current adapters
+        orderMenuRecyclerAdapter.setOrderList(orderList);
+        orderMenuRecyclerAdapter1.setOrderList(orderList);
+        orderMenuRecyclerAdapter2.setOrderList(orderList);
+
+        orderMenuRecyclerAdapter.setOrderCounter(orderCountView);
+        orderMenuRecyclerAdapter1.setOrderCounter(orderCountView);
+        orderMenuRecyclerAdapter2.setOrderCounter(orderCountView);
     }
     private void initTabLayout() {
         tabLayout = findViewById(R.id.simpleTabLayout);

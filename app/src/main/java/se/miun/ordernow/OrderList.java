@@ -4,9 +4,10 @@ package se.miun.ordernow;
 import java.util.ArrayList;
 
 public class OrderList {
-    private static ArrayList<Order> list = new ArrayList<>();
+    private ArrayList<Order> list;
 
     public OrderList() {
+        list = new ArrayList<>();
     }
 
     public ArrayList<Order> getList() {
@@ -68,6 +69,10 @@ public class OrderList {
                 break;
             }
         }
+    }
+
+    public int size() {
+        return list.size();
     }
 
     public void printList() {

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderStatus extends AppCompatActivity {
-    private ArrayList<Order> orderList;
+    private MasterOrderList masterList;
     private int tableNumber;
 
     private RecyclerView recyclerView;
@@ -29,13 +29,14 @@ public class OrderStatus extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_status);
-        OrderList listObject = new OrderList();
-        orderList = listObject.getList();
+        masterList = new MasterOrderList();
+        tableNumber = 4;
+        OrderList currentTableOrderList = masterList.getOrderList(tableNumber);
 
         recyclerView = findViewById(R.id.orderList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this,1));
-        adapter = new OrderStatusRecyclerAdapter(orderList);
+        adapter = new OrderStatusRecyclerAdapter(currentTableOrderList.getList());
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
@@ -49,7 +50,7 @@ public class OrderStatus extends AppCompatActivity {
         });
 
         readyButton = findViewById(R.id.readyButton);
-        String buttonText = listObject.getButtonState();
+        String buttonText = currentTableOrderList.getButtonState();
 
         if(buttonText.contains("Waiting")) {
             readyButton.setBackgroundColor(Color.GRAY);
@@ -70,9 +71,9 @@ public class OrderStatus extends AppCompatActivity {
         readyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listObject.updateState();
+                currentTableOrderList.updateState();
                 adapter.notifyDataSetChanged();
-                String buttonText = listObject.getButtonState();
+                String buttonText = currentTableOrderList.getButtonState();
                 if(buttonText.isEmpty()) {
                     readyButton.setVisibility(View.GONE);
                 }

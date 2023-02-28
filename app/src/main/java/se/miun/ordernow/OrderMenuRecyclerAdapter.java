@@ -19,7 +19,7 @@ import java.util.List;
 public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecyclerAdapter.MyViewHolder> {
     private List<String> menuNameList;
 
-    private List<Order> orderList;
+    private OrderList orderList;
     private TextView orderCounter;
 
     private RecyclerViewClickListner listner;
@@ -28,7 +28,7 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
         this.listner = listner;
     }
 
-    public void setOrderList(List<Order> list) {
+    public void setOrderList(OrderList list) {
         orderList = list;
     }
     public void setOrderCounter(TextView view) {
@@ -65,9 +65,7 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
                     else if(OrderMenu.currentType == 2) {
                         type = Order.OrderType.EFTERÄTT;
                     }
-                    //orderList.add(new Order(addButton.getTag().toString(), type, editButton.getTag().toString()));
-                    OrderList data = new OrderList();
-                    data.addElement(new Order(addButton.getTag().toString(), type, editText.getText().toString()));
+                    orderList.addElement(new Order(addButton.getTag().toString(), type, editText.getText().toString()));
                     System.out.println("Order added: " + addButton.getTag());
                     System.out.println("Type: " + type.toString());
                     System.out.println("Description: " + editText.getText());
