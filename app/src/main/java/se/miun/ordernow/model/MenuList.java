@@ -50,8 +50,16 @@ public class MenuList {
             @Override
             public void onResponse(Call<List<MenuItem>> call, Response<List<MenuItem>> response) {
                 List<MenuItem> list = response.body();
+                if(list == null) {
+                    System.out.println("Null list response");
+                    return;
+                }
                 // Add each item to their respective list.
                 for(MenuItem item: list) {
+                    if(!item.isValid()) {
+                        System.out.println("Invalid item in response list");
+                        continue;
+                    }
                     // Appetizers
                     MenuItem.Type category = item.getCategory();
                     switch (category) {

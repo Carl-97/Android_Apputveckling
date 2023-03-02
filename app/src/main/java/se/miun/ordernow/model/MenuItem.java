@@ -15,7 +15,7 @@ public class MenuItem {
     @SerializedName("description")
     private String description;
 
-    @SerializedName("itemcategory")
+    @SerializedName("itemCategory")
     private String category;
 
     @SerializedName("price")
@@ -49,6 +49,17 @@ public class MenuItem {
                 break;
         }
         return type;
+    }
+
+    public boolean isValid() {
+        boolean valid = true;
+        if(name == null)
+            valid = false;
+        else if(description == null)
+            valid = false;
+        else if(category == null)
+            valid = false;
+        return valid;
     }
 
     public void setCategory(String category) {

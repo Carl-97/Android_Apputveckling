@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.miun.ordernow.model.OrderList;
-//ToDo: Does not work atm, communication between OrderMenu and OrderStatus not working.
 public class MasterOrderList {
     public static final int MAXIMUM_TABLES = 8;
-    private List<OrderList> masterList = null;
+    private static List<OrderList> masterList = null;
 
     public MasterOrderList() {
         if(masterList == null) {

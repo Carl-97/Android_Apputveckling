@@ -85,4 +85,12 @@ public class OrderItem {
             return false;
         return true;
     }
+
+    public boolean equals(OrderItem rhs) {
+        boolean nameMatch = this.name.equals(rhs.name);
+        boolean descMatch = this.description.equals(rhs.description);
+        if(nameMatch && descMatch)
+            return true;
+        return false;
+    }
 }

@@ -12,15 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import se.miun.ordernow.R;
 import se.miun.ordernow.model.MasterOrderList;
 import se.miun.ordernow.model.OrderItem;
 import se.miun.ordernow.model.OrderList;
-import se.miun.ordernow.model.RetrofitClient;
-import se.miun.ordernow.model.Temp;
 
 public class OrderStatus extends AppCompatActivity {
     private MasterOrderList masterList;
@@ -73,25 +68,6 @@ public class OrderStatus extends AppCompatActivity {
                 currentTableOrderList.updateState();
                 adapter.notifyDataSetChanged();
                 setReadyButtonState();
-
-                Temp myTemp = new Temp(0, "desc", "F", "New item", 50);
-                Call<Temp> call = RetrofitClient.getInstance().getMyApi().postOrderItems(myTemp);
-                call.enqueue(new Callback<Temp>() {
-                    @Override
-                    public void onResponse(Call<Temp> call, Response<Temp> response) {
-                        System.out.println("Succesfull Post call");
-                        Temp responseTemp = response.body();
-                        if(responseTemp != null) {
-                            System.out.println(responseTemp.getName());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Temp> call, Throwable t) {
-                        System.out.println("Error post call");
-                        System.out.println(t.getMessage());
-                    }
-                });
             }
         });
     }
