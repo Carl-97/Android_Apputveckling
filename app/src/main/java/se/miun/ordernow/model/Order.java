@@ -1,4 +1,4 @@
-package se.miun.ordernow;
+package se.miun.ordernow.model;
 
 
 import java.util.List;

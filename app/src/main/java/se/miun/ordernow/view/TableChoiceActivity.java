@@ -1,4 +1,4 @@
-package se.miun.ordernow;
+package se.miun.ordernow.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -11,6 +11,9 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import se.miun.ordernow.R;
+import se.miun.ordernow.model.Table;
 
 public class TableChoiceActivity extends AppCompatActivity {
     private RecyclerView recyclerView;

@@ -15,20 +15,20 @@
         android:theme="@style/Theme.OrderNow"
         tools:targetApi="31">
         <activity
-            android:name=".OrderStatus"
+            android:name=".view.OrderStatus"
             android:exported="false" />
         <activity
-            android:name=".OrderMenu"
+            android:name=".view.OrderMenu"
             android:exported="false" />
         <activity
-            android:name=".KitchenMenuActivity"
+            android:name=".view.KitchenMenuActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainActivity2"
+            android:name=".view.MainActivity2"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,7 +41,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".TableChoiceActivity"
+            android:name=".view.TableChoiceActivity"
             android:exported="false"
             android:label="@string/title_activity_table_choice"
             android:theme="@style/Theme.OrderNow.NoActionBar">
@@ -50,7 +50,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".FloorActivity"
+            android:name=".view.FloorActivity"
             android:exported="true">
 
             <!--

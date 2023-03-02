@@ -1,4 +1,4 @@
-package se.miun.ordernow;
+package se.miun.ordernow.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -13,31 +13,24 @@ import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import se.miun.ordernow.model.RetrofitClient;
-import se.miun.ordernow.model.Temp;
+import se.miun.ordernow.R;
+import se.miun.ordernow.model.MasterOrderList;
+import se.miun.ordernow.model.MenuList;
+import se.miun.ordernow.model.OrderList;
 
 public class OrderMenu extends AppCompatActivity {
-    private List<String> items = Arrays.asList("Förrätt", "item2", "item3", "item4", "item1", "item2", "item3", "item4", "item1", "item2", "item3", "item4", "item1", "item2", "item3", "item4");
-    private List<String> items1 = Arrays.asList("Varmrätt", "order12", "order1", "order1", "order1", "order1", "item3", "item4", "item1", "item2", "item3", "item4", "item1", "item2", "item3", "item4");
-    private List<String> items2 = Arrays.asList("Efterätt", "order12", "order1", "order1", "order1", "order1", "item3", "item4", "item1", "item2", "item3", "item4", "item1", "item2", "item3", "item4");
-
+    MenuList menuList;
     private RecyclerView recyclerView;
-    private OrderMenuRecyclerAdapter orderMenuRecyclerAdapter;
-    private OrderMenuRecyclerAdapter orderMenuRecyclerAdapter1;
-    private OrderMenuRecyclerAdapter orderMenuRecyclerAdapter2;
+    private static OrderMenuRecyclerAdapter orderMenuRecyclerAdapter;
+    private static OrderMenuRecyclerAdapter orderMenuRecyclerAdapter1;
+    private static OrderMenuRecyclerAdapter orderMenuRecyclerAdapter2;
     private OrderMenuRecyclerAdapter.RecyclerViewClickListner listener;
 
     private List<String> tempList;
 
     private TabLayout tabLayout;
-    public static int currentType;
 
     private MasterOrderList masterOrderList;
     private int tableNumber;
@@ -52,26 +45,7 @@ public class OrderMenu extends AppCompatActivity {
         Intent intent = getIntent();
         tableNumber = intent.getIntExtra("tableNumber", 0);
 
-        // ToDo: Api call shouldnt be here, but it works! Also the MenuList doesnt update at first?
-        tempList = new ArrayList<>();
-        Call<List<Temp>> call = RetrofitClient.getInstance().getMyApi().getItems();
-        call.enqueue(new Callback<List<Temp>>() {
-            @Override
-            public void onResponse(Call<List<Temp>> call, Response<List<Temp>> response) {
-                List<Temp> list = response.body();
-                for(int i = 0; i < list.size(); ++i) {
-                    tempList.add(list.get(i).name);
-                }
-                System.out.println("API CALL SUCCESS!");
-            }
-
-            @Override
-            public void onFailure(Call<List<Temp>> call, Throwable t) {
-                tempList.add("Failure");
-                System.out.println("API CALL FAILURE!");
-                System.out.println(t.getMessage());
-            }
-        });
+        menuList = new MenuList();
 
         masterOrderList = new MasterOrderList();
         OrderList currentTableOrderList = masterOrderList.getOrderList(tableNumber);
@@ -79,20 +53,15 @@ public class OrderMenu extends AppCompatActivity {
         orderCount = findViewById(R.id.numberOfOrders);
         orderCount.setText("Order Count: " + currentTableOrderList.size());
 
-        initRecyclerView(currentTableOrderList, orderCount);
         initTabLayout();
+        initRecyclerView(currentTableOrderList, orderCount);
 
 
         doneButton = findViewById(R.id.tempButton);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentType = 0;
-
                 finish();
-                /*
-                Intent switchActivity = new Intent(OrderMenu.this, OrderStatus.class);
-                startActivity(switchActivity);*/
             }
         });
     }
@@ -108,9 +77,9 @@ public class OrderMenu extends AppCompatActivity {
         recyclerView = findViewById(R.id.menuRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this,1));
-        orderMenuRecyclerAdapter = new OrderMenuRecyclerAdapter(tempList, listener);
-        orderMenuRecyclerAdapter1 = new OrderMenuRecyclerAdapter(items1, listener);
-        orderMenuRecyclerAdapter2 = new OrderMenuRecyclerAdapter(items2, listener);
+        orderMenuRecyclerAdapter = new OrderMenuRecyclerAdapter(menuList.getAppetizers(), listener);
+        orderMenuRecyclerAdapter1 = new OrderMenuRecyclerAdapter(menuList.getMainDishes(), listener);
+        orderMenuRecyclerAdapter2 = new OrderMenuRecyclerAdapter(menuList.getDesserts(), listener);
         recyclerView.setAdapter(orderMenuRecyclerAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
@@ -129,8 +98,6 @@ public class OrderMenu extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int pos = tab.getPosition();
-                currentType = pos;
-
                 switch(pos) {
                     case 0: {
                         recyclerView.swapAdapter(orderMenuRecyclerAdapter, false);
@@ -154,10 +121,14 @@ public class OrderMenu extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                int pos = tab.getPosition();
-                currentType = pos;
             }
         });
+    }
+
+    public static void updateAdapters() {
+        orderMenuRecyclerAdapter.notifyDataSetChanged();
+        orderMenuRecyclerAdapter1.notifyDataSetChanged();
+        orderMenuRecyclerAdapter2.notifyDataSetChanged();
     }
 }
 

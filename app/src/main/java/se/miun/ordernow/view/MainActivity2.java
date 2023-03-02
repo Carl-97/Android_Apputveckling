@@ -1,4 +1,4 @@
-package se.miun.ordernow;
+package se.miun.ordernow.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import se.miun.ordernow.R;
 
 public class MainActivity2 extends AppCompatActivity {
     Button chooseFloorBTN;

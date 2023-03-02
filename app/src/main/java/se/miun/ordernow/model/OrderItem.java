@@ -1,8 +1,8 @@
-package se.miun.ordernow;
+package se.miun.ordernow.model;
 
 // Represent an item from an Order.
 public class OrderItem {
-    enum Status {
+    public enum Status {
         HOLD, COOK, READY, DONE;
 
         public Status next() {
@@ -15,7 +15,7 @@ public class OrderItem {
             return ordinal() < status.ordinal();
         }
     }
-    enum Type {
+    public enum Type {
         FÖRRÄTT, VARMRÄTT, EFTERÄTT
     }
     private long id;

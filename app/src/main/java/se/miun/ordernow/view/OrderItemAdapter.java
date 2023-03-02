@@ -1,4 +1,4 @@
-package se.miun.ordernow;
+package se.miun.ordernow.view;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import se.miun.ordernow.R;
+import se.miun.ordernow.model.OrderItem;
 
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyViewHolder> {
     private List<OrderItem> itemList;

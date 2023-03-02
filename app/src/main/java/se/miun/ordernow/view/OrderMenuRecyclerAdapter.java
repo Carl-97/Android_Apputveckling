@@ -1,4 +1,4 @@
-package se.miun.ordernow;
+package se.miun.ordernow.view;
 
 import android.content.Context;
 import android.view.KeyEvent;
@@ -16,14 +16,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import se.miun.ordernow.R;
+import se.miun.ordernow.model.MenuItem;
+import se.miun.ordernow.model.OrderItem;
+import se.miun.ordernow.model.OrderList;
+
 public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecyclerAdapter.MyViewHolder> {
-    private List<String> menuNameList;
+    private List<MenuItem> menuNameList;
 
     private OrderList orderList;
     private TextView orderCounter;
 
     private RecyclerViewClickListner listner;
-    public OrderMenuRecyclerAdapter(List<String> tablesList, RecyclerViewClickListner listner){
+    public OrderMenuRecyclerAdapter(List<MenuItem> tablesList, RecyclerViewClickListner listner){
         this.menuNameList = tablesList;
         this.listner = listner;
     }
@@ -57,15 +62,8 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
             addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    OrderItem.Type type = OrderItem.Type.FÖRRÄTT;
-
-                    if(OrderMenu.currentType == 1) {
-                        type = OrderItem.Type.VARMRÄTT;
-                    }
-                    else if(OrderMenu.currentType == 2) {
-                        type = OrderItem.Type.EFTERÄTT;
-                    }
-                    orderList.add(new OrderItem(addButton.getTag().toString(), type, editText.getText().toString()));
+                    MenuItem clickedItem = (MenuItem) addButton.getTag();
+                    orderList.add(new OrderItem(clickedItem.getName(), OrderItem.Type.values()[clickedItem.getCategory().ordinal()], editText.getText().toString()));
 
                     // Reset editText view. And close keyboard after ActionSend.
                     editText.setText("");
@@ -127,11 +125,11 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
 
     @Override
     public void onBindViewHolder(@NonNull OrderMenuRecyclerAdapter.MyViewHolder holder, int position) {
-        String name = menuNameList.get(position);
-        holder.menuName.setText(name);
+        MenuItem item = menuNameList.get(position);
+        holder.menuName.setText(item.getName());
 
         // Bind the order name to the add button.
-        holder.addButton.setTag(name);
+        holder.addButton.setTag(item);
         holder.editButton.setTag("");
     }
 
@@ -139,6 +137,5 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
     public int getItemCount() {
         return menuNameList.size();
     }
-
 
 }

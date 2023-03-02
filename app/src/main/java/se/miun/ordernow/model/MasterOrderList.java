@@ -1,18 +1,21 @@
-package se.miun.ordernow;
+package se.miun.ordernow.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import se.miun.ordernow.model.OrderList;
+//ToDo: Does not work atm, communication between OrderMenu and OrderStatus not working.
 public class MasterOrderList {
     public static final int MAXIMUM_TABLES = 8;
-    private static final ArrayList<OrderList> masterList = new ArrayList<>();
+    private List<OrderList> masterList = null;
 
     public MasterOrderList() {
-        if(masterList.size() != MAXIMUM_TABLES) {
+        if(masterList == null) {
+            masterList = new ArrayList<>();
             for (int i = 0; i < MAXIMUM_TABLES; ++i) {
                 masterList.add(new OrderList());
             }
         }
-        System.out.println("MasterOrder object created, size is " + masterList.size());
     }
 
     public OrderList getOrderList(int tableIndex) {

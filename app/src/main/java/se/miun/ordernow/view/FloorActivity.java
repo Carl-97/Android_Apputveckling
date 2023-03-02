@@ -1,4 +1,4 @@
-package se.miun.ordernow;
+package se.miun.ordernow.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import se.miun.ordernow.R;
 
 public class FloorActivity extends AppCompatActivity {
     Button chooseTableBTN;
@@ -21,7 +23,7 @@ public class FloorActivity extends AppCompatActivity {
         chooseTableBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(FloorActivity.this ,TableChoiceActivity.class);
+                Intent intent = new Intent(FloorActivity.this , TableChoiceActivity.class);
                 startActivity(intent);
 
             }

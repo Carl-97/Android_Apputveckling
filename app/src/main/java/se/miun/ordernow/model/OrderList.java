@@ -1,7 +1,9 @@
-package se.miun.ordernow;
+package se.miun.ordernow.model;
 
 
 import java.util.ArrayList;
+
+import se.miun.ordernow.model.OrderItem;
 
 public class OrderList {
     private ArrayList<OrderItem> list;
