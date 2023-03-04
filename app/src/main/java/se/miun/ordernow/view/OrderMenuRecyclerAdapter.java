@@ -27,10 +27,11 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
     private OrderList orderList;
     private TextView orderCounter;
 
-    private RecyclerViewClickListner listner;
-    public OrderMenuRecyclerAdapter(List<MenuItem> tablesList, RecyclerViewClickListner listner){
+
+    public OrderMenuRecyclerAdapter(List<MenuItem> tablesList, OrderList orderList, TextView orderCounter){
         this.menuNameList = tablesList;
-        this.listner = listner;
+        this.orderList = orderList;
+        this.orderCounter = orderCounter;
     }
 
     public void setOrderList(OrderList list) {
@@ -39,12 +40,8 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
     public void setOrderCounter(TextView view) {
         orderCounter = view;
     }
-    public interface RecyclerViewClickListner{
-        void onClick(View v, int position);
 
-    }
-
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView menuName;
         private Button editButton;
@@ -52,7 +49,6 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
         public Button addButton;
         public MyViewHolder(final View view){
             super(view);
-            view.setOnClickListener(this);
             menuName = view.findViewById(R.id.menu_item_name);
             editButton = view.findViewById(R.id.menu_edit_button);
             addButton = view.findViewById(R.id.menu_add_button);
@@ -109,12 +105,6 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
                 }
             });
         }
-
-        @Override
-        public void onClick(View view) {
-            listner.onClick(view, getAbsoluteAdapterPosition());
-        }
-
     }
     @NonNull
     @Override

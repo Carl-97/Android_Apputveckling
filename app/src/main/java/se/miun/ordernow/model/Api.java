@@ -13,6 +13,9 @@ public interface Api {
     @GET("item")
     Call<List<MenuItem>> getItems();
 
+    @GET("order")
+    Call<List<OrderItem>> getOrders();
+
     @POST("order/neworder")
     Call<List<OrderItem>> postOrderItems(@Body List<OrderItem> orderItems);
 }

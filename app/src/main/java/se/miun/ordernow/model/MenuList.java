@@ -9,19 +9,23 @@ import retrofit2.Response;
 import se.miun.ordernow.view.OrderMenu;
 
 public class MenuList {
-    private List<MenuItem> appetizers = null;
-    private List<MenuItem> mainDishes = null;
-    private List<MenuItem> desserts = null;
+    private static List<MenuItem> appetizers = null;
+    private static List<MenuItem> mainDishes = null;
+    private static List<MenuItem> desserts = null;
 
     public MenuList() {
         if(appetizers == null) {
-            appetizers = new ArrayList<>();
-            mainDishes = new ArrayList<>();
-            desserts = new ArrayList<>();
-
-            // Make API call here?
-            getMenuListFromAPI();
+            initMenuList();
         }
+    }
+
+    private void initMenuList() {
+        appetizers = new ArrayList<>();
+        mainDishes = new ArrayList<>();
+        desserts = new ArrayList<>();
+
+        ApiCommunicator apiCommunicator = new ApiCommunicator();
+        apiCommunicator.fillMenuList();
     }
 
     public void refreshMenuList() {
@@ -29,7 +33,8 @@ public class MenuList {
         mainDishes.clear();
         desserts.clear();
 
-        getMenuListFromAPI();
+        ApiCommunicator apiCommunicator = new ApiCommunicator();
+        apiCommunicator.fillMenuList();
     }
 
     public List<MenuItem> getAppetizers() {
@@ -44,51 +49,26 @@ public class MenuList {
         return desserts;
     }
 
-    private void getMenuListFromAPI() {
-        Call<List<MenuItem>> call = RetrofitClient.getInstance().getMyApi().getItems();
-        call.enqueue(new Callback<List<MenuItem>>() {
-            @Override
-            public void onResponse(Call<List<MenuItem>> call, Response<List<MenuItem>> response) {
-                List<MenuItem> list = response.body();
-                if(list == null) {
-                    System.out.println("Null list response");
-                    return;
-                }
-                // Add each item to their respective list.
-                for(MenuItem item: list) {
-                    if(!item.isValid()) {
-                        System.out.println("Invalid item in response list");
-                        continue;
-                    }
-                    // Appetizers
-                    MenuItem.Type category = item.getCategory();
-                    switch (category) {
-                        case FÖRRÄTT: {
-                            appetizers.add(item);
-                            break;
-                        }
-                        case VARMRÄTT: {
-                            mainDishes.add(item);
-                            break;
-                        }
-                        case EFTERÄTT: {
-                            desserts.add(item);
-                            break;
-                        }
-                        default: {
-                            System.out.println("Unknown category: " + item.getCategory() + ", name: " + item.getName());
-                        }
-                    }
-                }
-                OrderMenu.updateAdapters();
-                System.out.println("API CALL SUCCESS!");
-            }
+    public void addMenuList(List<MenuItem> menuList) {
+        for(MenuItem item: menuList) {
+            MenuItem.Type type = item.getCategory();
 
-            @Override
-            public void onFailure(Call<List<MenuItem>> call, Throwable t) {
-                System.out.println("API CALL FAILURE!");
-                System.out.println(t.getMessage());
+            switch(type) {
+                case FÖRRÄTT:
+                    appetizers.add(item);
+                    break;
+                case VARMRÄTT:
+                    mainDishes.add(item);
+                    break;
+                case EFTERÄTT:
+                    desserts.add(item);
+                    break;
+                default:
+                    System.out.println("tried to add unrecognized item type in menulist");
             }
-        });
+        }
+
+        // If ordermenu is open we must update adapters.
+        OrderMenu.updateAdapters();
     }
 }

@@ -16,7 +16,9 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.List;
 
 import se.miun.ordernow.R;
+import se.miun.ordernow.model.BackgroundApiFetcher;
 import se.miun.ordernow.model.MasterOrderList;
+import se.miun.ordernow.model.MenuItem;
 import se.miun.ordernow.model.MenuList;
 import se.miun.ordernow.model.OrderList;
 
@@ -26,7 +28,6 @@ public class OrderMenu extends AppCompatActivity {
     private static OrderMenuRecyclerAdapter orderMenuRecyclerAdapter;
     private static OrderMenuRecyclerAdapter orderMenuRecyclerAdapter1;
     private static OrderMenuRecyclerAdapter orderMenuRecyclerAdapter2;
-    private OrderMenuRecyclerAdapter.RecyclerViewClickListner listener;
 
     private List<String> tempList;
 
@@ -67,30 +68,14 @@ public class OrderMenu extends AppCompatActivity {
     }
 
     private void initRecyclerView(OrderList orderList, TextView orderCountView) {
-        listener = new OrderMenuRecyclerAdapter.RecyclerViewClickListner() {
-            @Override
-            public void onClick(View v, int position) {
-                System.out.println("Clicked!");
-            }
-        };
-
         recyclerView = findViewById(R.id.menuRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this,1));
-        orderMenuRecyclerAdapter = new OrderMenuRecyclerAdapter(menuList.getAppetizers(), listener);
-        orderMenuRecyclerAdapter1 = new OrderMenuRecyclerAdapter(menuList.getMainDishes(), listener);
-        orderMenuRecyclerAdapter2 = new OrderMenuRecyclerAdapter(menuList.getDesserts(), listener);
+        orderMenuRecyclerAdapter = new OrderMenuRecyclerAdapter(menuList.getAppetizers(), orderList, orderCountView);
+        orderMenuRecyclerAdapter1 = new OrderMenuRecyclerAdapter(menuList.getMainDishes(), orderList, orderCountView);
+        orderMenuRecyclerAdapter2 = new OrderMenuRecyclerAdapter(menuList.getDesserts(), orderList, orderCountView);
         recyclerView.setAdapter(orderMenuRecyclerAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
-
-        // Set orderList and orderCounter for current adapters
-        orderMenuRecyclerAdapter.setOrderList(orderList);
-        orderMenuRecyclerAdapter1.setOrderList(orderList);
-        orderMenuRecyclerAdapter2.setOrderList(orderList);
-
-        orderMenuRecyclerAdapter.setOrderCounter(orderCountView);
-        orderMenuRecyclerAdapter1.setOrderCounter(orderCountView);
-        orderMenuRecyclerAdapter2.setOrderCounter(orderCountView);
     }
     private void initTabLayout() {
         tabLayout = findViewById(R.id.simpleTabLayout);
@@ -126,6 +111,9 @@ public class OrderMenu extends AppCompatActivity {
     }
 
     public static void updateAdapters() {
+        if(orderMenuRecyclerAdapter == null)
+            return;
+
         orderMenuRecyclerAdapter.notifyDataSetChanged();
         orderMenuRecyclerAdapter1.notifyDataSetChanged();
         orderMenuRecyclerAdapter2.notifyDataSetChanged();

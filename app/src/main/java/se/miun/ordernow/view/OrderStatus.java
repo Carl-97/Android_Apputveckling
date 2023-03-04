@@ -22,11 +22,11 @@ public class OrderStatus extends AppCompatActivity {
     private int tableNumber;
 
     private RecyclerView recyclerView;
-    private Button readyButton;
+    private static Button readyButton;
     private Button menuButton;
     private TextView title;
 
-    private OrderStatusRecyclerAdapter adapter;
+    private static OrderStatusRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +36,12 @@ public class OrderStatus extends AppCompatActivity {
         Intent intent = getIntent();
         tableNumber = intent.getIntExtra("tableNumber", 0);
 
-        masterList = new MasterOrderList();
-        OrderList currentTableOrderList = masterList.getOrderList(tableNumber);
-
-        recyclerView = findViewById(R.id.orderList);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,1));
-        adapter = new OrderStatusRecyclerAdapter(currentTableOrderList);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
-
         title = findViewById(R.id.title);
         title.setText("Table " + tableNumber + " Status");
+
+        masterList = new MasterOrderList();
+        OrderList currentTableOrderList = masterList.getOrderList(tableNumber);
+        initRecyclerView(currentTableOrderList);
 
         menuButton = findViewById(R.id.orderButton);
         menuButton.setOnClickListener(new View.OnClickListener() {
@@ -65,9 +59,8 @@ public class OrderStatus extends AppCompatActivity {
         readyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentTableOrderList.updateState();
-                adapter.notifyDataSetChanged();
-                setReadyButtonState();
+                currentTableOrderList.updateOrderStatus(OrderStatus.this);
+                updateView();
             }
         });
     }
@@ -75,24 +68,50 @@ public class OrderStatus extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        setReadyButtonState();
+        updateView();
+    }
+
+    public static void updateAdapter() {
+        if(adapter == null)
+            return;
 
         adapter.notifyDataSetChanged();
     }
 
+    public void updateView() {
+        updateAdapter();
+        setReadyButtonState();
+    }
+
+    private void initRecyclerView(OrderList orderList) {
+        adapter = new OrderStatusRecyclerAdapter(orderList);
+
+        recyclerView = findViewById(R.id.orderList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(this,1));
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+    }
+
+
+
     private void setReadyButtonState() {
         String buttonText = getReadyButtonText();
         readyButton.setText(buttonText);
+
         if(buttonText.isEmpty()) {
             readyButton.setVisibility(View.GONE);
         }
         else
             readyButton.setVisibility(View.VISIBLE);
+
         if(buttonText.contains("Waiting")) {
             readyButton.setBackgroundColor(Color.GRAY);
+            readyButton.setEnabled(false);
         }
         else {
             readyButton.setBackgroundColor(Color.BLUE);
+            readyButton.setEnabled(true);
         }
     }
 

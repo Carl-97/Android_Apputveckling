@@ -7,7 +7,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import se.miun.ordernow.model.OrderItem;
+import se.miun.ordernow.view.OrderStatus;
 
 public class OrderList {
     private ArrayList<OrderItem> list;
@@ -40,51 +40,27 @@ public class OrderList {
 
     // Updates state by changing status for orders that are ready to done
     // And sends the next orders with the next ordertype to kitchen by changing status from hold to cook.
-    public void updateState() {
-        OrderItem.Type currentType = OrderItem.Type.FÖRRÄTT;
+    public void updateOrderStatus(final OrderStatus orderStatusActivity) {
         boolean updated = false;
-        for(OrderItem o: list) {
-            OrderItem.Status currentStatus = o.getStatus();
+
+        for(OrderItem order: list) {
+            OrderItem.Status currentStatus = order.getStatus();
+            OrderItem.Type currentType = order.getType();
+
             switch(currentStatus) {
                 case HOLD: {
                     // Send all order with the same type to kitchen via API.
-                    // ToDo: API call inside this class seems weird...
-                    List<OrderItem> ordersToSend = new ArrayList<>();
-                    currentType = o.getType();
                     // Find all orders with same type and add them so the list that will be sent over API.
+                    List<OrderItem> ordersToSend = new ArrayList<>();
                     for(OrderItem nextOrder: list) {
                         if(nextOrder.getType().equals(currentType) && nextOrder.getStatus().equals(currentStatus)) {
                             ordersToSend.add(nextOrder);
                         }
                     }
+                    // Send to API
+                    ApiCommunicator apiCommunicator = new ApiCommunicator();
+                    apiCommunicator.postOrders(ordersToSend, orderStatusActivity);
 
-                    Call<List<OrderItem>> call = RetrofitClient.getInstance().getMyApi().postOrderItems(ordersToSend);
-                    call.enqueue(new Callback<List<OrderItem>>() {
-                        @Override
-                        public void onResponse(Call<List<OrderItem>> call, Response<List<OrderItem>> response) {
-                            List<OrderItem> responseList = response.body();
-                            if(responseList == null) {
-                                System.out.println("Null list response");
-                                return;
-                            }
-                            for(OrderItem item: responseList) {
-                                System.out.println(item.getName());
-
-                                // Update all statuses of the sent orders in orderList
-                                for(int i = 0; i < list.size(); ++i) {
-                                    if(item.equals(list.get(i))) {
-                                        list.get(i).nextStatus();
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<List<OrderItem>> call, Throwable t) {
-                            System.out.println("API Response Error: Posting orders to api");
-                        }
-                    });
                     updated = true;
                     break;
                 }
@@ -95,7 +71,6 @@ public class OrderList {
                 }
                 case READY: {
                     // If orders are ready they should be tagged as Done
-                    currentType = o.getType();
                     for(OrderItem nextOrder: list) {
                         if(nextOrder.getType().equals(currentType) && nextOrder.getStatus().equals(currentStatus)) {
                             nextOrder.nextStatus();

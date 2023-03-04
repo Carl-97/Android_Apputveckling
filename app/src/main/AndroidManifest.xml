@@ -28,7 +28,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".view.MainActivity2"
+            android:name=".controller.MainActivity2"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
