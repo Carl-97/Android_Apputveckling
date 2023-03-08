@@ -3,9 +3,6 @@ package se.miun.ordernow.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import se.miun.ordernow.view.OrderMenu;
 
 public class MenuList {
@@ -54,13 +51,13 @@ public class MenuList {
             MenuItem.Type type = item.getCategory();
 
             switch(type) {
-                case FÖRRÄTT:
+                case APPETIZER:
                     appetizers.add(item);
                     break;
-                case VARMRÄTT:
+                case MAINDISH:
                     mainDishes.add(item);
                     break;
-                case EFTERÄTT:
+                case DESSERT:
                     desserts.add(item);
                     break;
                 default:

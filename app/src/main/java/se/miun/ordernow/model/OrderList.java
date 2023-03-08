@@ -4,9 +4,6 @@ package se.miun.ordernow.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import se.miun.ordernow.view.OrderStatus;
 
 public class OrderList {
@@ -24,8 +21,8 @@ public class OrderList {
             list.add(element);
             return;
         }
-        int i = 0;
-        for (; i < list.size(); ++i) {
+
+        for (int i = 0; i < list.size(); ++i) {
             if(element.lessThan(list.get(i))) {
                 list.add(i, element);
                 return;
@@ -38,6 +35,16 @@ public class OrderList {
         return list.get(index);
     }
 
+    private int getNextType(int index) {
+        MenuItem.Type type = list.get(index).getType();
+        for(int i = index; i < list.size(); ++i) {
+            if(list.get(i).getType() != type)
+                return i;
+        }
+
+        return -1;
+    }
+
     // Updates state by changing status for orders that are ready to done
     // And sends the next orders with the next ordertype to kitchen by changing status from hold to cook.
     public void updateOrderStatus(final OrderStatus orderStatusActivity) {
@@ -45,7 +52,7 @@ public class OrderList {
 
         for(OrderItem order: list) {
             OrderItem.Status currentStatus = order.getStatus();
-            OrderItem.Type currentType = order.getType();
+            MenuItem.Type currentType = order.getType();
 
             switch(currentStatus) {
                 case HOLD: {
@@ -59,7 +66,7 @@ public class OrderList {
                     }
                     // Send to API
                     ApiCommunicator apiCommunicator = new ApiCommunicator();
-                    apiCommunicator.postOrders(ordersToSend, orderStatusActivity);
+                    apiCommunicator.test(ordersToSend, orderStatusActivity);
 
                     updated = true;
                     break;
@@ -67,7 +74,11 @@ public class OrderList {
                 case COOK: {
                     // If orders are being prepared the button should not work.
                     // As we are waiting for kitchen to complete the orders.
-
+                    for(OrderItem nextOrder: list) {
+                        if(nextOrder.getType().equals(currentType) && nextOrder.getStatus().equals(currentStatus)) {
+                            nextOrder.nextStatus();
+                        }
+                    }
                 }
                 case READY: {
                     // If orders are ready they should be tagged as Done
@@ -78,7 +89,7 @@ public class OrderList {
                     }
                     // When the main dishes have been delivered, desserts should not be sent to kitchen immediately.
                     // So we exit the for loop.
-                    if(currentType == OrderItem.Type.VARMRÄTT) {
+                    if(currentType == MenuItem.Type.MAINDISH) {
                         updated = true;
                     }
                     break;
@@ -100,6 +111,58 @@ public class OrderList {
     public void printList() {
         for(OrderItem o: list) {
             System.out.println(o.toString());
+        }
+    }
+
+    // Code below is for when we have sync list structure.
+    public void sendAllOrders(final OrderStatus activity) {
+        if(list.size() == 0)
+            return;
+
+        OrderItem firstOrder = list.get(0);
+        MenuItem.Type currentType = firstOrder.getType();
+
+        for(OrderItem order: list) {
+            if(currentType == order.getType()) {
+                order.nextStatus();
+            }
+        }
+
+        ApiCommunicator apiCommunicator = new ApiCommunicator();
+        apiCommunicator.postOrders(list, activity);
+
+        activity.updateView();
+    }
+
+    public void nextListState(final OrderStatus activity) {
+        if(list.size() == 0)
+            return;
+
+        int orderIndex = 0;
+        OrderItem order = list.get(orderIndex);
+        OrderItem.Status currentStatus = order.getStatus();
+        MenuItem.Type currentType = order.getType();
+
+        // Update all order of same type that is "READY"
+        if(currentStatus == OrderItem.Status.READY) {
+            for(OrderItem orderItem: list) {
+                if(orderItem.getType() == currentType) {
+                    orderItem.nextStatus();
+                }
+            }
+
+            if(order.getType() == MenuItem.Type.MAINDISH)
+                return;
+        }
+
+        orderIndex = getNextType(orderIndex);
+        if(orderIndex == -1)
+            return;
+
+        for(OrderItem orderItem: list) {
+            if(orderItem.getType() == currentType) {
+                orderItem.nextStatus();
+            }
         }
     }
 }

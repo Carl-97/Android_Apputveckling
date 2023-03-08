@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import se.miun.ordernow.R;
+import se.miun.ordernow.model.ApiCommunicator;
+import se.miun.ordernow.model.Order;
 import se.miun.ordernow.model.OrderItem;
 
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyViewHolder> {
@@ -48,7 +50,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
             readyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    System.out.println("I AM READY");
+                    // Send item to api
                 }
             });
         }

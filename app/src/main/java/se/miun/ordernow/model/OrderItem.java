@@ -1,5 +1,7 @@
 package se.miun.ordernow.model;
 
+import com.google.gson.annotations.SerializedName;
+
 // Represent an item from an Order.
 public class OrderItem {
     public enum Status {
@@ -15,42 +17,55 @@ public class OrderItem {
             return ordinal() < status.ordinal();
         }
     }
-    public enum Type {
-        FÖRRÄTT, VARMRÄTT, EFTERÄTT
-    }
-    private long id;
-    private String name;
-    private Type type;
+    @SerializedName("ordersId")
+    private int orderItemId = 0;
+    @SerializedName("note")
     private String description;
+
+    @SerializedName("cooked")
+    private boolean hasBeenCooked = false;
+
+    @SerializedName("itemsByItemFk")
+    private MenuItem menuItem;
+    @SerializedName("dinnertableByTableFk")
+    private Table table;
+
     private Status status;
 
-    private static long idCounter = 0;
 
-    public OrderItem(String name, Type type, String description) {
-        this.id = idCounter;
-        this.name = name;
-        this.type = type;
+    public OrderItem(MenuItem menuItem, String description, int tableIndex) {
+        this.menuItem = menuItem;
+        // Yuck conversion
         this.description = description;
+        TableList tableList = new TableList();
+        this.table = tableList.getTable(tableIndex);
         status = Status.HOLD;
-
-        // Increase id counter for next object.
-        ++idCounter;
     }
 
+    public boolean hasBeenCooked() {
+        return hasBeenCooked;
+    }
+
+    public int getId() {
+        return orderItemId;
+    }
+    public MenuItem getMenuItem() {
+        return menuItem;
+    }
     public String getName() {
-        return name;
+        return menuItem.getName();
     }
 
     public void setName(String name) {
-        this.name = name;
+        menuItem.setName(name);
     }
 
-    public Type getType() {
-        return type;
+    public MenuItem.Type getType() {
+        return menuItem.getCategory();
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setType(String type) {
+        menuItem.setCategory(type);
     }
 
     public String getDescription() {
@@ -67,11 +82,27 @@ public class OrderItem {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    public long getMenuItemID() {
+        return menuItem.getId();
+    }
+
+    public int getTableNumber() {
+        if(table == null)
+            return 0;
+
+        return table.getTableId();
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
     public void nextStatus() { status = status.next(); }
 
 
     public String toString() {
-        return name + " " + description;
+        return menuItem.getName() + " " + description;
     }
 
     public boolean lessThan(OrderItem rhs) {
@@ -87,10 +118,29 @@ public class OrderItem {
     }
 
     public boolean equals(OrderItem rhs) {
-        boolean nameMatch = this.name.equals(rhs.name);
+        boolean nameMatch = this.menuItem.getName().equals(rhs.menuItem.getName());
         boolean descMatch = this.description.equals(rhs.description);
         if(nameMatch && descMatch)
             return true;
         return false;
+    }
+
+    public void print() {
+        if(menuItem != null) {
+            menuItem.print();
+        }
+        else
+            System.out.println("MenuItem: null");
+
+        System.out.print("Order description: ");
+        if(description == null)
+            System.out.println("null");
+        else
+            System.out.println(description);
+
+        if(table != null)
+            table.print();
+        else
+            System.out.println("Table: null");
     }
 }

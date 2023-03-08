@@ -1,31 +1,41 @@
 package se.miun.ordernow.model;
 
-import java.util.List;
-
 public class Table {
-    private int tableNumber;
-    private boolean tableStatus;
+    private int tableId = 0;
+    private int tablesize = 0;
 
-    public Table(int tableNumber, boolean tableStatus) {
-        this.tableNumber = tableNumber;
-        this.tableStatus = tableStatus;
-    }
-    public Table(int tableNumber) {
-        this.tableNumber = tableNumber;
-    }
-    public int getTableNumber() {
-        return tableNumber;
+    public Table(int id, int size) {
+        this.tableId = id;
+        this.tablesize = size;
     }
 
-    public void setTableNumber(int tableNumber) {
-        this.tableNumber = tableNumber;
+    public int getTableId() {
+        return tableId;
     }
 
-    public boolean isTableStatus() {
-        return tableStatus;
+    public void setTableId(int tableId) {
+        this.tableId = tableId;
     }
 
-    public void setTableStatus(boolean tableStatus) {
-        this.tableStatus = tableStatus;
+    public int getTablesize() {
+        return tablesize;
+    }
+
+    public void setTablesize(int tablesize) {
+        this.tablesize = tablesize;
+    }
+
+    public void print() {
+        System.out.print("table id: ");
+        if(tableId == 0)
+            System.out.println("null");
+        else
+            System.out.println(tableId);
+
+        System.out.print("table size: ");
+        if(tablesize == 0)
+            System.out.println("null");
+        else
+            System.out.println(tablesize);
     }
 }

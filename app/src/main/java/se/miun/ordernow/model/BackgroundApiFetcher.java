@@ -27,7 +27,6 @@ public class BackgroundApiFetcher {
     }
 
     private void getOrderListAndUpdate() {
-        List<OrderItem> orderList = new ArrayList<>();
         apiCommunicator.updateMasterOrderList();
     }
 }

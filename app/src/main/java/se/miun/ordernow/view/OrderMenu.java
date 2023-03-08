@@ -55,7 +55,7 @@ public class OrderMenu extends AppCompatActivity {
         orderCount.setText("Order Count: " + currentTableOrderList.size());
 
         initTabLayout();
-        initRecyclerView(currentTableOrderList, orderCount);
+        initRecyclerView(currentTableOrderList, orderCount, tableNumber);
 
 
         doneButton = findViewById(R.id.tempButton);
@@ -67,13 +67,13 @@ public class OrderMenu extends AppCompatActivity {
         });
     }
 
-    private void initRecyclerView(OrderList orderList, TextView orderCountView) {
+    private void initRecyclerView(OrderList orderList, TextView orderCountView, int table) {
         recyclerView = findViewById(R.id.menuRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this,1));
-        orderMenuRecyclerAdapter = new OrderMenuRecyclerAdapter(menuList.getAppetizers(), orderList, orderCountView);
-        orderMenuRecyclerAdapter1 = new OrderMenuRecyclerAdapter(menuList.getMainDishes(), orderList, orderCountView);
-        orderMenuRecyclerAdapter2 = new OrderMenuRecyclerAdapter(menuList.getDesserts(), orderList, orderCountView);
+        orderMenuRecyclerAdapter = new OrderMenuRecyclerAdapter(menuList.getAppetizers(), orderList, orderCountView, tableNumber);
+        orderMenuRecyclerAdapter1 = new OrderMenuRecyclerAdapter(menuList.getMainDishes(), orderList, orderCountView, tableNumber);
+        orderMenuRecyclerAdapter2 = new OrderMenuRecyclerAdapter(menuList.getDesserts(), orderList, orderCountView, tableNumber);
         recyclerView.setAdapter(orderMenuRecyclerAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
     }

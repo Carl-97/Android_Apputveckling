@@ -26,12 +26,14 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
 
     private OrderList orderList;
     private TextView orderCounter;
+    private int tableNumber;
 
 
-    public OrderMenuRecyclerAdapter(List<MenuItem> tablesList, OrderList orderList, TextView orderCounter){
+    public OrderMenuRecyclerAdapter(List<MenuItem> tablesList, OrderList orderList, TextView orderCounter, int tableNumber){
         this.menuNameList = tablesList;
         this.orderList = orderList;
         this.orderCounter = orderCounter;
+        this.tableNumber = tableNumber;
     }
 
     public void setOrderList(OrderList list) {
@@ -59,7 +61,7 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
                 @Override
                 public void onClick(View view) {
                     MenuItem clickedItem = (MenuItem) addButton.getTag();
-                    orderList.add(new OrderItem(clickedItem.getName(), OrderItem.Type.values()[clickedItem.getCategory().ordinal()], editText.getText().toString()));
+                    orderList.add(new OrderItem(clickedItem, editText.getText().toString(), tableNumber));
 
                     // Reset editText view. And close keyboard after ActionSend.
                     editText.setText("");

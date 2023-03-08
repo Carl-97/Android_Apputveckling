@@ -14,6 +14,7 @@ import java.util.List;
 
 import se.miun.ordernow.R;
 import se.miun.ordernow.model.Order;
+import se.miun.ordernow.model.OrderItem;
 
 public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.MyViewHolder> {
     private List<Order> orderList;
@@ -47,9 +48,6 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
                 orderList.remove(getAbsoluteAdapterPosition());
                 notifyItemRemoved(getAbsoluteAdapterPosition());
             });
-
-
-
         }
 
 
@@ -67,7 +65,7 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
         holder.orderNumber.setText("Order: " + orderNumber);
 
         Order order = orderList.get(position);
-       String tableNumber = String.valueOf(orderList.get(position).getTable().getTableNumber());
+        String tableNumber = String.valueOf(orderList.get(position).getTable().getTableId());
         holder.tableNumber.setText("Table: " + tableNumber);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(
@@ -78,6 +76,10 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
         layoutManager.setInitialPrefetchItemCount(order.getItems().size());
 
         OrderItemAdapter orderItemAdapter = new OrderItemAdapter(order.getItems());
+        System.out.println("Order size: " + order.getItems().size());
+        for(OrderItem item: order.getItems()) {
+            item.print();
+        }
 
 
         holder.itemsList.setLayoutManager(layoutManager);

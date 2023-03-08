@@ -19,6 +19,17 @@ public class MasterOrderList {
         }
     }
 
+    public void clear() {
+        masterList.clear();
+        for (int i = 0; i < MAXIMUM_TABLES; ++i) {
+            masterList.add(new OrderList());
+        }
+    }
+
+    public void clearOrderList(int index) {
+        masterList.get(index).getList().clear();
+    }
+
     public OrderList getOrderList(int tableIndex) {
         return masterList.get(tableIndex);
     }
@@ -31,21 +42,22 @@ public class MasterOrderList {
     // as there can exist multiple items from the same table that "come from" the same MenuItem and has the same description.
     public void updateOrderStatusByList(List<OrderItem> inputList) {
         boolean updated = false;
+
         for(OrderItem inputItem: inputList) {
-            for(OrderList orderList: masterList) {
-                for(OrderItem item: orderList.getList()) {
-                    if(inputItem.equals(item)) {
-                        if(inputItem.getStatus() != item.getStatus()) {
-                            item.nextStatus();
-                            updated = true;
-                        }
+            if(!inputItem.hasBeenCooked()) {
+                continue;
+            }
+            for(OrderItem localItem: masterList.get(inputItem.getTableNumber()).getList()) {
+                if(inputItem.equals(localItem)) {
+                    if(localItem.getStatus() == OrderItem.Status.COOK) {
+                        // Send notification here also
+                        localItem.nextStatus();
+                        break;
                     }
                 }
             }
         }
-        // If we update list notify OrderStatus adapter.
-        if(updated) {
-            OrderStatus.updateAdapter();
-        }
+
+        OrderStatus.updateAdapter();
     }
 }

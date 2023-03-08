@@ -26,8 +26,8 @@ public class TableChoiceActivity extends AppCompatActivity {
         setContentView(R.layout.choose_table_layout);
         // ToDo: Fetch from list instead of just creating "random" tables.
         tableList = new ArrayList<>();
-        for(int i = 0; i < 8; ++i) {
-            tableList.add(new Table(i, false));
+        for(int i = 1; i <= 8; ++i) {
+            tableList.add(new Table(i, 4));
         }
 
         displayItem();

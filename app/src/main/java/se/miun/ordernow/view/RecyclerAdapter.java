@@ -49,7 +49,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
-        String name = String.valueOf(tablesList.get(position).getTableNumber());
+        String name = String.valueOf(tablesList.get(position).getTableId());
         holder.tableNameText.setText(name);
 
     }

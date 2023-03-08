@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.miun.ordernow.R;
+import se.miun.ordernow.model.KitchenOrderList;
 import se.miun.ordernow.model.Table;
 import se.miun.ordernow.model.Order;
 import se.miun.ordernow.model.OrderItem;
@@ -19,7 +20,7 @@ public class KitchenMenuActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private KitchenMenuAdapter kitchenMenuAdapter;
     private KitchenMenuAdapter.RecyclerViewClickListener listener;
-    List<Order> orderList = new ArrayList<>();
+    public static KitchenOrderList orderList = new KitchenOrderList();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,15 +30,17 @@ public class KitchenMenuActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ArrayList<OrderItem> item = new ArrayList<OrderItem>();
-        item.add(new OrderItem("potatis", OrderItem.Type.VARMRÄTT, "mayt"));
-        item.add(new OrderItem("kött", OrderItem.Type.VARMRÄTT, "utan potatis"));
-        item.add(new OrderItem("morot   ", OrderItem.Type.FÖRRÄTT, "utan potatis"));
-        item.add(new OrderItem("mos", OrderItem.Type.VARMRÄTT, "utan potatis"));
-        item.add(new OrderItem("godis", OrderItem.Type.EFTERÄTT, "mayt"));
+        /*
+        item.add(new OrderItem(1, "potatis", OrderItem.Type.MAINDISH, "mayt", 1));
+        item.add(new OrderItem(1, "kött", OrderItem.Type.MAINDISH, "utan potatis", 1));
+        item.add(new OrderItem(1, "morot   ", OrderItem.Type.APPETIZER, "utan potatis", 1));
+        item.add(new OrderItem(1, "mos", OrderItem.Type.MAINDISH, "utan potatis", 1));
+        item.add(new OrderItem(1, "godis", OrderItem.Type.DESSERT, "mayt", 1));
         Table table = new Table(1);
         orderList.add(new Order(01, item, table));
         orderList.add(new Order(02, item, table));
         orderList.add(new Order(03, item, table));
+         */
         displayItem();
 
     }
@@ -48,7 +51,7 @@ public class KitchenMenuActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView_kitchenMenu);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        kitchenMenuAdapter = new KitchenMenuAdapter(orderList);
+        kitchenMenuAdapter = new KitchenMenuAdapter(orderList.getOrderList());
         recyclerView.setAdapter(kitchenMenuAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL));
 
