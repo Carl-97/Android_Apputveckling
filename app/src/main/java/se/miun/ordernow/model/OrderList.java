@@ -66,7 +66,7 @@ public class OrderList {
                     }
                     // Send to API
                     ApiCommunicator apiCommunicator = new ApiCommunicator();
-                    apiCommunicator.test(ordersToSend, orderStatusActivity);
+                    apiCommunicator.postOrders(ordersToSend, orderStatusActivity);
 
                     updated = true;
                     break;

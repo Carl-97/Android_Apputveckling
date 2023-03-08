@@ -13,6 +13,7 @@ import java.util.List;
 
 import se.miun.ordernow.R;
 import se.miun.ordernow.model.ApiCommunicator;
+import se.miun.ordernow.model.KitchenOrderList;
 import se.miun.ordernow.model.Order;
 import se.miun.ordernow.model.OrderItem;
 
@@ -29,13 +30,14 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
     }
     public interface RecyclerViewClickListener {
         void onClick(View v, int position);
-
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView itemTypeName;
         private TextView itemName;
         private TextView itemDescription;
+
+        private OrderItem item;
 
         private Button readyButton;
 
@@ -51,6 +53,10 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
                 @Override
                 public void onClick(View view) {
                     // Send item to api
+                    System.out.println("Ready button was clicked!");
+                    System.out.println("Sending item: " + item.getName() + " to API");
+                    ApiCommunicator apiCommunicator = new ApiCommunicator();
+                    apiCommunicator.postOrderItemCooked(OrderItemAdapter.this, itemList, getAbsoluteAdapterPosition(), item);
                 }
             });
         }
@@ -67,6 +73,8 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull OrderItemAdapter.MyViewHolder holder, int position) {
+        holder.item = itemList.get(position);
+
         String itemType = itemList.get(position).getType().toString();
         holder.itemTypeName.setText("Type: " + itemType);
 
@@ -81,5 +89,14 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
     @Override
     public int getItemCount() {
         return itemList.size();
+    }
+
+    public void update() {
+        notifyDataSetChanged();
+        if(itemList.size() == 0) {
+            System.out.println("Order is empty, removing order");
+            KitchenOrderList masterList = new KitchenOrderList();
+            masterList.removeEmptyOrders();
+        }
     }
 }

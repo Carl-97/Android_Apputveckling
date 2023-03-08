@@ -48,16 +48,11 @@ public class ApiCommunicator {
 
     // DEBUGGING:
     public void test(List<OrderItem> orders, final OrderStatus activity) {
-        System.out.println("Trying to post following orders to api:");
-        for(OrderItem item: orders) {
-            System.out.println("{");
-            item.print();
-            System.out.println("}");
-        }
+        // Print request Body
         GsonConverterFactory factory = GsonConverterFactory.create();
         Gson gson = new Gson();
         System.out.println("Request body: " + gson.toJson(orders));
-        //factory.requestBodyConverter(OrderItem.class);
+
         Call<ResponseBody> call = apiInstance.testPost(orders);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -82,13 +77,6 @@ public class ApiCommunicator {
     }
 
     public void postOrders(List<OrderItem> orders, final OrderStatus orderStatusActivity) {
-        System.out.println("Trying to post following orders to api:");
-        for(OrderItem item: orders) {
-            System.out.println("{");
-            item.print();
-            System.out.println("}");
-        }
-
         Call<List<OrderItem>> call = apiInstance.postOrderItems(orders);
         call.enqueue(new Callback<List<OrderItem>>() {
             @Override
@@ -97,15 +85,29 @@ public class ApiCommunicator {
                     System.out.println("postOrder() -> Error: Api Response list was null");
                     return;
                 }
-                if(response.body().size() == orders.size()) {
-                    System.out.println("Error: Api Response list size does not match posted list");
+                if(response.body().size() != orders.size()) {
+                    System.out.println("Error: Api Response list size does not match posted list?");
+                    System.out.print("Received items: {");
+                    for(OrderItem recievedItem: response.body()) {
+                        System.out.print(recievedItem.getName() + ", ");
+                    }
+                    System.out.println("}");
+
+                    System.out.print("Posted items: {");
+                    for(OrderItem postedItem: orders) {
+                        System.out.print(postedItem.getName() + ", ");
+                    }
+                    System.out.println("}");
+                }
+                else {
+                    List<OrderItem> responseList = response.body();
+                    for(int i = 0; i < orders.size(); ++i) {
+                        orders.get(i).setId(responseList.get(i).getId());
+                    }
                 }
 
-                for(OrderItem item: response.body()) {
-                    if(item != null)
-                        item.print();
-                    else
-                        System.out.println("Null item");
+                for(OrderItem item: orders) {
+                    item.nextStatus();
                 }
 
                 orderStatusActivity.updateView();
@@ -132,7 +134,7 @@ public class ApiCommunicator {
                 System.out.println("Fetching order from database");
 
                 MasterOrderList masterList = new MasterOrderList();
-                //masterList.updateOrderStatusByList(list);
+                masterList.updateOrderStatusByList(list);
 
                 KitchenOrderList kitchenOrderList = new KitchenOrderList();
                 for(OrderItem item: list) {
@@ -149,19 +151,40 @@ public class ApiCommunicator {
         });
     }
 
-    public void kitchenOrderItemReady(OrderItemAdapter adapter, List<OrderItem> list, int index, OrderItem orderItem) {
-        Call<OrderItem> call = apiInstance.postOrderItemReady(orderItem);
+    public void postOrderItemCooked(OrderItemAdapter adapter, List<OrderItem> list, int index, OrderItem orderItem) {
+        Call<OrderItem> call = apiInstance.postOrderItemReady(orderItem.getId());
+        printRequestBody(orderItem.getId());
         call.enqueue(new Callback<OrderItem>() {
             @Override
             public void onResponse(Call<OrderItem> call, Response<OrderItem> response) {
+                OrderItem changedItem = response.body();
+                if(changedItem == null) {
+                    System.out.println("Null response");
+                    return;
+                }
+                System.out.println("Removing item: " + changedItem.getName());
                 list.remove(index);
-                adapter.notifyDataSetChanged();
+                if(list.size() == 0) {
+
+                }
+                adapter.update();
             }
 
             @Override
             public void onFailure(Call<OrderItem> call, Throwable t) {
-
+                System.out.println("API Response Error: Posting OrderItem cooked to api");
+                System.out.println(t.getMessage());
+                System.out.println(t.getLocalizedMessage());
+                System.out.println(t.toString());
             }
         });
+    }
+
+    private void printRequestBody(Object obj) {
+        if(obj == null)
+            return;
+        Gson converter = new Gson();
+        System.out.print("Request body: ");
+        System.out.println(converter.toJson(obj));
     }
 }

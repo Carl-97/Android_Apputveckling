@@ -76,19 +76,10 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
         layoutManager.setInitialPrefetchItemCount(order.getItems().size());
 
         OrderItemAdapter orderItemAdapter = new OrderItemAdapter(order.getItems());
-        System.out.println("Order size: " + order.getItems().size());
-        for(OrderItem item: order.getItems()) {
-            item.print();
-        }
-
 
         holder.itemsList.setLayoutManager(layoutManager);
         holder.itemsList.setAdapter(orderItemAdapter);
         holder.itemsList.setRecycledViewPool(viewPool);
-
-
-
-
     }
 
     @Override

@@ -47,17 +47,17 @@ public class MasterOrderList {
             if(!inputItem.hasBeenCooked()) {
                 continue;
             }
-            for(OrderItem localItem: masterList.get(inputItem.getTableNumber()).getList()) {
+            for(OrderItem localItem: masterList.get(inputItem.getTableNumber() - 1).getList()) {
                 if(inputItem.equals(localItem)) {
                     if(localItem.getStatus() == OrderItem.Status.COOK) {
                         // Send notification here also
                         localItem.nextStatus();
-                        break;
                     }
+                    break;
                 }
             }
         }
 
-        OrderStatus.updateAdapter();
+        OrderStatus.updateView();
     }
 }

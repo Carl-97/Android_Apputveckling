@@ -8,9 +8,14 @@ import se.miun.ordernow.view.KitchenMenuActivity;
 public class KitchenOrderList {
     private static List<Order> orderList;
 
+    // In case the POST from kitchen happens at the same time as
+    // the GET from background updater.
+    private static List<OrderItem> recentlyRemovedOrders;
+
     public KitchenOrderList() {
         if(orderList == null) {
             orderList = new ArrayList<>();
+            recentlyRemovedOrders = new ArrayList<>();
         }
     }
 
@@ -18,8 +23,11 @@ public class KitchenOrderList {
         return orderList;
     }
 
+    public List<OrderItem> getRecentlyRemovedOrders() {
+        return recentlyRemovedOrders;
+    }
+
     public void addItem(OrderItem item) {
-        System.out.println("Trying to add item: " + item.getName());
         boolean orderExists = false;
         for(int i = 0; i < orderList.size(); ++i) {
             if(item.getTableNumber() == orderList.get(i).getOrderNumber()) {
@@ -28,8 +36,7 @@ public class KitchenOrderList {
             }
         }
 
-        if(!orderExists) {
-            System.out.println("Added a new order with table number: " + item.getTableNumber());
+        if(!orderExists && !item.hasBeenCooked()) {
             orderList.add(new Order(item.getTableNumber(), item.getTable()));
         }
 
@@ -37,6 +44,15 @@ public class KitchenOrderList {
             if(o.getOrderNumber() == item.getTableNumber()) {
                 o.addItem(item);
                 break;
+            }
+        }
+        KitchenMenuActivity.updateAdapter();
+    }
+
+    public void removeEmptyOrders() {
+        for(int i = 0; i < orderList.size(); ++i) {
+            if(orderList.get(i).size() == 0) {
+                orderList.remove(i);
             }
         }
     }

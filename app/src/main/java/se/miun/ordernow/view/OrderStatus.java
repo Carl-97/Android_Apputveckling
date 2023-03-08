@@ -18,8 +18,8 @@ import se.miun.ordernow.model.OrderItem;
 import se.miun.ordernow.model.OrderList;
 
 public class OrderStatus extends AppCompatActivity {
-    private MasterOrderList masterList;
-    private int tableNumber;
+    private static MasterOrderList masterList;
+    private static int tableNumber;
 
     private RecyclerView recyclerView;
     private static Button readyButton;
@@ -78,7 +78,10 @@ public class OrderStatus extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    public void updateView() {
+    public static void updateView() {
+        if(masterList == null)
+            return;
+
         updateAdapter();
         setReadyButtonState();
     }
@@ -95,7 +98,7 @@ public class OrderStatus extends AppCompatActivity {
 
 
 
-    private void setReadyButtonState() {
+    private static void setReadyButtonState() {
         String buttonText = getReadyButtonText();
         readyButton.setText(buttonText);
 
@@ -115,13 +118,33 @@ public class OrderStatus extends AppCompatActivity {
         }
     }
 
-    private String getReadyButtonText() {
-        for(OrderItem order: masterList.getOrderList(tableNumber).getList()) {
-            if(order.getStatus() == OrderItem.Status.DONE)
+    private static String getReadyButtonText() {
+        OrderList orderList = masterList.getOrderList(tableNumber);
+        for(int i = 0; i < orderList.size(); ++i) {
+            if(orderList.get(i).getStatus() == OrderItem.Status.DONE)
                 continue;
-            return buttonStateString[order.getType().ordinal() * 3 + order.getStatus().ordinal()];
+            // Check that all orders of the same type has the same status.
+            boolean allSameStatus = true;
+            int j = i;
+            for(; j < orderList.size(); ++j) {
+                if(orderList.get(i).getType() != orderList.get(j).getType()) {
+                    break;
+                }
+
+                if(orderList.get(i).getStatus() != orderList.get(j).getStatus()) {
+                    allSameStatus = false;
+                    break;
+                }
+            }
+            if(!allSameStatus) {
+                // Prioritize "less ready" status, so HOLD goes before COOK
+                if(!orderList.get(i).getStatus().lessThan(orderList.get(j).getStatus())) {
+                    i = j;
+                }
+            }
+            return buttonStateString[orderList.get(i).getType().ordinal() * 3 + orderList.get(i).getStatus().ordinal()];
         }
         return "";
     }
-    private String[] buttonStateString = {"Send Apetizer", "Waiting for Apetizer", "Apetizer delivered", "Send Main", "Waiting for Main", "Main delivered", "Send Dessert", "Waiting for Dessert", "Dessert delivered"};
+    private static String[] buttonStateString = {"Send Apetizer", "Waiting for Apetizer", "Apetizer delivered", "Send Main", "Waiting for Main", "Main delivered", "Send Dessert", "Waiting for Dessert", "Dessert delivered"};
 }

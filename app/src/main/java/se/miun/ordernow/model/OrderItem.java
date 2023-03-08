@@ -49,6 +49,9 @@ public class OrderItem {
     public int getId() {
         return orderItemId;
     }
+    public void setId(int id) {
+        orderItemId = id;
+    }
     public MenuItem getMenuItem() {
         return menuItem;
     }
@@ -118,11 +121,7 @@ public class OrderItem {
     }
 
     public boolean equals(OrderItem rhs) {
-        boolean nameMatch = this.menuItem.getName().equals(rhs.menuItem.getName());
-        boolean descMatch = this.description.equals(rhs.description);
-        if(nameMatch && descMatch)
-            return true;
-        return false;
+        return getId() == rhs.getId();
     }
 
     public void print() {

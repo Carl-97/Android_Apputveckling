@@ -30,13 +30,15 @@ public class Order {
         boolean exists = false;
         for(int i = 0; i < items.size(); ++i) {
             if(item.getId() == items.get(i).getId()) {
-                System.out.println("This item already exists: " + item.getName() + " with id: " + item.getId());
                 exists = true;
                 break;
             }
         }
         if(!exists) {
-            System.out.println("Added item to an order");
+            if(item.hasBeenCooked()) {
+                return;
+            }
+
             items.add(item);
         }
     }
@@ -55,5 +57,9 @@ public class Order {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public int size() {
+        return items.size();
     }
 }
