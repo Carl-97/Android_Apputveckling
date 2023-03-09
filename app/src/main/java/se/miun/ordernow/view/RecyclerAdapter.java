@@ -1,5 +1,6 @@
 package se.miun.ordernow.view;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import se.miun.ordernow.R;
+import se.miun.ordernow.model.MasterOrderList;
 import se.miun.ordernow.model.Table;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
@@ -49,9 +51,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
-        String name = String.valueOf(tablesList.get(position).getTableId());
+        String name = "Table " + String.valueOf(tablesList.get(position).getTableId());
         holder.tableNameText.setText(name);
-
+        MasterOrderList masterList = new MasterOrderList();
+        if(masterList.getOrderList(position).ordersReady()) {
+            holder.tableNameText.setTextColor(Color.rgb(200, 181, 15));
+        }
+        else {
+            holder.tableNameText.setTextColor(Color.DKGRAY);
+        }
     }
 
     @Override

@@ -28,25 +28,33 @@ public class KitchenOrderList {
     }
 
     public void addItem(OrderItem item) {
+        if(item.hasBeenCooked())
+            return;
+
+        int orderIndex = 0;
         boolean orderExists = false;
         for(int i = 0; i < orderList.size(); ++i) {
             if(item.getTableNumber() == orderList.get(i).getOrderNumber()) {
                 orderExists = true;
+                orderIndex = i;
                 break;
             }
         }
 
-        if(!orderExists && !item.hasBeenCooked()) {
+        boolean updated = false;
+        if(!orderExists) {
             orderList.add(new Order(item.getTableNumber(), item.getTable()));
+            orderIndex = orderList.size() - 1;
+            updated = true;
         }
 
-        for(Order o: orderList) {
-            if(o.getOrderNumber() == item.getTableNumber()) {
-                o.addItem(item);
-                break;
-            }
-        }
-        KitchenMenuActivity.updateAdapter();
+        Order order = orderList.get(orderIndex);
+        boolean added = order.addItem(item);
+        if(added)
+            updated = true;
+
+        if(updated)
+            KitchenMenuActivity.updateAdapter();
     }
 
     public void removeEmptyOrders() {

@@ -26,7 +26,10 @@ public class Order {
         this.items = new ArrayList<>();
     }
 
-    public void addItem(OrderItem item) {
+    public boolean addItem(OrderItem item) {
+        if(item.hasBeenCooked())
+            return false;
+
         boolean exists = false;
         for(int i = 0; i < items.size(); ++i) {
             if(item.getId() == items.get(i).getId()) {
@@ -34,13 +37,11 @@ public class Order {
                 break;
             }
         }
-        if(!exists) {
-            if(item.hasBeenCooked()) {
-                return;
-            }
+        if(exists)
+            return false;
 
-            items.add(item);
-        }
+        items.add(item);
+        return true;
     }
 
     public int getOrderNumber() {

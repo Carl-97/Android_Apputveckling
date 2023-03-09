@@ -61,7 +61,8 @@ public class OrderMenuRecyclerAdapter extends RecyclerView.Adapter<OrderMenuRecy
                 @Override
                 public void onClick(View view) {
                     MenuItem clickedItem = (MenuItem) addButton.getTag();
-                    orderList.add(new OrderItem(clickedItem, editText.getText().toString(), tableNumber));
+                    orderList.add(new OrderItem(clickedItem, editText.getText().toString(), tableNumber - 1));
+                    System.out.println("OrderItem added to table " + tableNumber);
 
                     // Reset editText view. And close keyboard after ActionSend.
                     editText.setText("");

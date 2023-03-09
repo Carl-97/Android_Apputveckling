@@ -91,12 +91,31 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
         return itemList.size();
     }
 
+    public void removeItem(OrderItem item) {
+        System.out.println("removeItem call");
+
+        for(int i = 0; i < itemList.size(); ++i) {
+            if(item.equals(itemList.get(i))) {
+                itemList.remove(i);
+                System.out.println("Remove item success");
+                notifyItemRemoved(i);
+                break;
+            }
+        }
+
+        if(itemList.size() == 0) {
+            KitchenOrderList kitchenList = new KitchenOrderList();
+            kitchenList.removeEmptyOrders();
+            KitchenMenuActivity.updateAdapter();
+        }
+    }
+
     public void update() {
-        notifyDataSetChanged();
         if(itemList.size() == 0) {
             System.out.println("Order is empty, removing order");
-            KitchenOrderList masterList = new KitchenOrderList();
-            masterList.removeEmptyOrders();
+            KitchenOrderList kitchenList = new KitchenOrderList();
+            kitchenList.removeEmptyOrders();
         }
+        notifyDataSetChanged();
     }
 }

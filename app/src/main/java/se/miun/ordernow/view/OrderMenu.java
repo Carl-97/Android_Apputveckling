@@ -44,12 +44,12 @@ public class OrderMenu extends AppCompatActivity {
         setContentView(R.layout.activity_order_menu);
 
         Intent intent = getIntent();
-        tableNumber = intent.getIntExtra("tableNumber", 0);
+        tableNumber = intent.getIntExtra("tableNumber", 1);
 
         menuList = new MenuList();
 
         masterOrderList = new MasterOrderList();
-        OrderList currentTableOrderList = masterOrderList.getOrderList(tableNumber);
+        OrderList currentTableOrderList = masterOrderList.getOrderList(tableNumber - 1);
 
         orderCount = findViewById(R.id.numberOfOrders);
         orderCount.setText("Order Count: " + currentTableOrderList.size());

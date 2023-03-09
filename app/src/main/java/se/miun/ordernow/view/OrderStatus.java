@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,29 +19,31 @@ import se.miun.ordernow.model.OrderItem;
 import se.miun.ordernow.model.OrderList;
 
 public class OrderStatus extends AppCompatActivity {
+    private static Context context;
     private static MasterOrderList masterList;
     private static int tableNumber;
 
-    private RecyclerView recyclerView;
+    private TextView title;
     private static Button readyButton;
     private Button menuButton;
-    private TextView title;
 
+    private RecyclerView recyclerView;
     private static OrderStatusRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getApplicationContext();
         setContentView(R.layout.activity_order_status);
 
         Intent intent = getIntent();
-        tableNumber = intent.getIntExtra("tableNumber", 0);
+        tableNumber = intent.getIntExtra("tableNumber", 1);
 
         title = findViewById(R.id.title);
         title.setText("Table " + tableNumber + " Status");
 
         masterList = new MasterOrderList();
-        OrderList currentTableOrderList = masterList.getOrderList(tableNumber);
+        OrderList currentTableOrderList = masterList.getOrderList(tableNumber - 1);
         initRecyclerView(currentTableOrderList);
 
         menuButton = findViewById(R.id.orderButton);
@@ -67,8 +70,13 @@ public class OrderStatus extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        Intent intent = getIntent();
+        tableNumber = intent.getIntExtra("tableNumber", 1);
         updateView();
+    }
+
+    public static Context getContext() {
+        return context;
     }
 
     public static void updateAdapter() {
@@ -119,7 +127,7 @@ public class OrderStatus extends AppCompatActivity {
     }
 
     private static String getReadyButtonText() {
-        OrderList orderList = masterList.getOrderList(tableNumber);
+        OrderList orderList = masterList.getOrderList(tableNumber - 1);
         for(int i = 0; i < orderList.size(); ++i) {
             if(orderList.get(i).getStatus() == OrderItem.Status.DONE)
                 continue;

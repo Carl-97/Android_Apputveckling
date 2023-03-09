@@ -39,9 +39,8 @@ public class TableChoiceActivity extends AppCompatActivity {
             public void onClick(View v, int position) {
                 System.out.println("YeS! YOU CLICked!");
                 Intent intent = new Intent(getApplicationContext(), OrderStatus.class);
-                intent.putExtra("tableNumber", position);
+                intent.putExtra("tableNumber", position + 1);
                 startActivity(intent);
-                //ToDo: check with Mattias
             }
         };
         recyclerView = findViewById(R.id.recyclerView_tableList);
@@ -50,7 +49,12 @@ public class TableChoiceActivity extends AppCompatActivity {
         recyclerAdapter = new RecyclerAdapter(tableList, listner);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL));
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        recyclerAdapter.notifyDataSetChanged();
     }
 };

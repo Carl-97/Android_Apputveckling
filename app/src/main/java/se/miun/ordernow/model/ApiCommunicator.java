@@ -77,6 +77,7 @@ public class ApiCommunicator {
     }
 
     public void postOrders(List<OrderItem> orders, final OrderStatus orderStatusActivity) {
+        System.out.println("Posting orders that belong to table " + orders.get(0).getTableNumber());
         Call<List<OrderItem>> call = apiInstance.postOrderItems(orders);
         call.enqueue(new Callback<List<OrderItem>>() {
             @Override
@@ -131,7 +132,8 @@ public class ApiCommunicator {
                     System.out.println("getAllOrder() -> Null orderlist response");
                     return;
                 }
-                System.out.println("Fetching order from database");
+                System.out.println("Fetching order from database, list size: " + list.size());
+
 
                 MasterOrderList masterList = new MasterOrderList();
                 masterList.updateOrderStatusByList(list);
@@ -140,7 +142,6 @@ public class ApiCommunicator {
                 for(OrderItem item: list) {
                     kitchenOrderList.addItem(item);
                 }
-
             }
 
             @Override
@@ -162,12 +163,10 @@ public class ApiCommunicator {
                     System.out.println("Null response");
                     return;
                 }
-                System.out.println("Removing item: " + changedItem.getName());
-                list.remove(index);
-                if(list.size() == 0) {
+                System.out.println("Within api response -> Removing item: " + changedItem.getName());
 
-                }
-                adapter.update();
+                adapter.removeItem(changedItem);
+                KitchenMenuActivity.updateAdapter();
             }
 
             @Override

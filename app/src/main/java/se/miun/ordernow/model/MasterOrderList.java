@@ -3,7 +3,8 @@ package se.miun.ordernow.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.miun.ordernow.model.OrderList;
+import se.miun.ordernow.controller.MainActivity;
+import se.miun.ordernow.controller.OrderStatusNotification;
 import se.miun.ordernow.view.OrderStatus;
 
 public class MasterOrderList {
@@ -43,6 +44,7 @@ public class MasterOrderList {
     public void updateOrderStatusByList(List<OrderItem> inputList) {
         boolean updated = false;
 
+        OrderStatusNotification notification = new OrderStatusNotification(MainActivity.getContext());
         for(OrderItem inputItem: inputList) {
             if(!inputItem.hasBeenCooked()) {
                 continue;
@@ -52,11 +54,14 @@ public class MasterOrderList {
                     if(localItem.getStatus() == OrderItem.Status.COOK) {
                         // Send notification here also
                         localItem.nextStatus();
+
+                        notification.add(localItem);
                     }
                     break;
                 }
             }
         }
+        notification.execute();
 
         OrderStatus.updateView();
     }

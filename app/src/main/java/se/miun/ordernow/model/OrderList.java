@@ -114,6 +114,15 @@ public class OrderList {
         }
     }
 
+    public boolean ordersReady() {
+        for(OrderItem item: list) {
+            if(item.getStatus() == OrderItem.Status.READY) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Code below is for when we have sync list structure.
     public void sendAllOrders(final OrderStatus activity) {
         if(list.size() == 0)
