@@ -97,17 +97,16 @@ public class OrderStatusNotification {
     }
 
     private void pushNotification(List<OrderItem> items) {
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        //stackBuilder.addNextIntent(new Intent(context, MainActivity.class));
+        // Backstack for the next activity.
         Intent mainActivityIntent = new Intent(context, MainActivity.class);
         Intent floorActivityIntent = new Intent(context, FloorActivity.class);
         Intent tableChooseActivityIntent = new Intent(context, TableChoiceActivity.class);
+
         Intent primaryIntent = new Intent(context, OrderStatus.class);
         primaryIntent.putExtra("tableNumber", items.get(0).getTableNumber());
-        //stackBuilder.addNextIntent(primaryIntent);
 
         PendingIntent pendingIntent = PendingIntent.getActivities(context, 0,
-                new Intent[]{mainActivityIntent, floorActivityIntent, tableChooseActivityIntent, primaryIntent}, PendingIntent.FLAG_ONE_SHOT);//stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                new Intent[]{mainActivityIntent, floorActivityIntent, tableChooseActivityIntent, primaryIntent}, PendingIntent.FLAG_ONE_SHOT);
 
         String title = "Table " + items.get(0).getTableNumber();
         String content = "";

@@ -17,6 +17,7 @@ import se.miun.ordernow.model.Order;
 import se.miun.ordernow.model.OrderItem;
 
 public class KitchenMenuActivity extends AppCompatActivity {
+    public static boolean active = false;
     private RecyclerView recyclerView;
     private static KitchenMenuAdapter kitchenMenuAdapter;
     private KitchenMenuAdapter.RecyclerViewClickListener listener;
@@ -25,6 +26,7 @@ public class KitchenMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kitchen_menu);
+        active = true;
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView_kitchenMenu);
         recyclerView.setHasFixedSize(true);
@@ -32,11 +34,22 @@ public class KitchenMenuActivity extends AppCompatActivity {
 
         displayItem();
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        active = true;
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        active = false;
+    }
+
     private void displayItem() {
         recyclerView = findViewById(R.id.recyclerView_kitchenMenu);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        kitchenMenuAdapter = new KitchenMenuAdapter(orderList.getOrderList());
+        kitchenMenuAdapter = new KitchenMenuAdapter(orderList);
         recyclerView.setAdapter(kitchenMenuAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL));
     }

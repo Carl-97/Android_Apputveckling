@@ -13,18 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import se.miun.ordernow.R;
+import se.miun.ordernow.model.KitchenOrderList;
 import se.miun.ordernow.model.Order;
 import se.miun.ordernow.model.OrderItem;
 
 public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.MyViewHolder> {
-    private List<Order> orderList;
+    private KitchenOrderList orderList;
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     private RecyclerViewClickListener listener;
-    public KitchenMenuAdapter(List<Order> orderList, RecyclerViewClickListener listener){
+    public KitchenMenuAdapter(KitchenOrderList orderList, RecyclerViewClickListener listener){
         this.orderList = orderList;
         this.listener =listener;
     }
-    public KitchenMenuAdapter(List<Order> orderList){
+    public KitchenMenuAdapter(KitchenOrderList orderList){
         this.orderList = orderList;
     }
     public interface RecyclerViewClickListener{
@@ -61,11 +62,12 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull KitchenMenuAdapter.MyViewHolder holder, int position) {
-        String orderNumber = String.valueOf(orderList.get(position).getOrderNumber());
+        Order order = orderList.getOrder(position);
+
+        String orderNumber = String.valueOf(order.getOrderNumber());
         holder.orderNumber.setText("Order: " + orderNumber);
 
-        Order order = orderList.get(position);
-        String tableNumber = String.valueOf(orderList.get(position).getTable().getTableId());
+        String tableNumber = String.valueOf(order.getTable().getTableId());
         holder.tableNumber.setText("Table: " + tableNumber);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(
@@ -75,7 +77,10 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
         );
         layoutManager.setInitialPrefetchItemCount(order.getItems().size());
 
-        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(order.getItems());
+        System.out.println("Binding order: " + order.getTable().getTableId());
+        System.out.println("On position: " + position);
+
+        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(order.getItems(), order.getTable().getTableId());
 
         holder.itemsList.setLayoutManager(layoutManager);
         holder.itemsList.setAdapter(orderItemAdapter);
@@ -86,7 +91,4 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
     public int getItemCount() {
         return orderList.size();
     }
-
-
-
 }

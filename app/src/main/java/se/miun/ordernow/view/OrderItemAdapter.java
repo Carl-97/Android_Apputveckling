@@ -19,14 +19,17 @@ import se.miun.ordernow.model.OrderItem;
 
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyViewHolder> {
     private List<OrderItem> itemList;
+    private int tableNumber;
     private OrderItemAdapter.RecyclerViewClickListener listener;
 
     public OrderItemAdapter(List<OrderItem> itemList, OrderItemAdapter.RecyclerViewClickListener listener) {
         this.itemList = itemList;
         this.listener = listener;
     }
-    public OrderItemAdapter(List<OrderItem> itemList) {
+    public OrderItemAdapter(List<OrderItem> itemList, int tableNumber) {
+        System.out.println("Constructing adapter with tableNumber: " + tableNumber);
         this.itemList = itemList;
+        this.tableNumber = tableNumber;
     }
     public interface RecyclerViewClickListener {
         void onClick(View v, int position);
@@ -83,7 +86,6 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
 
         String itemDescription = itemList.get(position).getDescription();
         holder.itemDescription.setText(itemDescription);
-
     }
 
     @Override
@@ -92,6 +94,22 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
     }
 
     public void removeItem(OrderItem item) {
+        // When the order is empty we remove the list.
+        // This cause our itemList to not function properly because it was a reference to that list.
+        // So in case try to remove an item while the itemList is empty we need a new reference to the new orderlist.
+        if(itemList.size() == 0) {
+            KitchenOrderList masterKitchenList = new KitchenOrderList();
+            List<OrderItem> tempList = masterKitchenList.requestNewReference(tableNumber);
+            if(tempList == null) {
+                System.out.println("Null reference list for tablenumber: " + tableNumber);
+                masterKitchenList.printCurrentOrderNumbers();
+            }
+            else
+                itemList = tempList;
+        }
+
+        boolean itemRemoved = false;
+
         System.out.println("removeItem call");
 
         for(int i = 0; i < itemList.size(); ++i) {
@@ -99,14 +117,24 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
                 itemList.remove(i);
                 System.out.println("Remove item success");
                 notifyItemRemoved(i);
+                itemRemoved = true;
                 break;
             }
         }
 
+        if(!itemRemoved) {
+            System.out.println("Failed to remove item: " +item.getName() + " with id: " + item.getId());
+            System.out.println("itemList size: " + itemList.size());
+        }
+
+        // If we remove the list we destroy our reference to it through itemList.
+        // So if new orders come in that belong to that list/table our itemList and KitchenOrderList are no longer synced.
         if(itemList.size() == 0) {
+            System.out.println("list is empty, removing it.");
             KitchenOrderList kitchenList = new KitchenOrderList();
-            kitchenList.removeEmptyOrders();
+            kitchenList.removeEmptyOrders(this);
             KitchenMenuActivity.updateAdapter();
+            System.out.println(itemList);
         }
     }
 
@@ -114,7 +142,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
         if(itemList.size() == 0) {
             System.out.println("Order is empty, removing order");
             KitchenOrderList kitchenList = new KitchenOrderList();
-            kitchenList.removeEmptyOrders();
+            kitchenList.removeEmptyOrders(this);
         }
         notifyDataSetChanged();
     }

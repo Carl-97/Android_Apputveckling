@@ -14,11 +14,12 @@ import java.util.List;
 import se.miun.ordernow.R;
 import se.miun.ordernow.model.MasterOrderList;
 import se.miun.ordernow.model.Table;
+import se.miun.ordernow.model.TableList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
-    private List<Table> tablesList;
+    private TableList tablesList;
     private RecyclerViewClickListener listener;
-    public RecyclerAdapter(List<Table> tablesList, RecyclerViewClickListener listener){
+    public RecyclerAdapter(TableList tablesList, RecyclerViewClickListener listener){
         this.tablesList = tablesList;
         this.listener = listener;
 
@@ -51,7 +52,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
-        String name = "Table " + String.valueOf(tablesList.get(position).getTableId());
+        String name = "Table " + String.valueOf(tablesList.getTable(position).getTableId());
         holder.tableNameText.setText(name);
         MasterOrderList masterList = new MasterOrderList();
         if(masterList.getOrderList(position).ordersReady()) {

@@ -19,11 +19,11 @@ public interface Api {
     @GET("orders")
     Call<List<OrderItem>> getOrders();
 
-    @POST("orders")
-    Call<List<OrderItem>> postOrderItems(@Body List<OrderItem> orderItems);
+    @GET("table")
+    Call<List<Table>> getTables();
 
     @POST("orders")
-    Call<ResponseBody> testPost(@Body List<OrderItem> orderItems);
+    Call<List<OrderItem>> postOrderItems(@Body List<OrderItem> orderItems);
 
     @POST("orders/kitchen/{ID}")
     Call<OrderItem> postOrderItemReady(@Path("ID") int ID);

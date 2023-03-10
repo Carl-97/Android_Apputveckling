@@ -5,6 +5,7 @@ import java.util.List;
 
 import se.miun.ordernow.controller.MainActivity;
 import se.miun.ordernow.controller.OrderStatusNotification;
+import se.miun.ordernow.view.KitchenMenuActivity;
 import se.miun.ordernow.view.OrderStatus;
 
 public class MasterOrderList {
@@ -61,6 +62,8 @@ public class MasterOrderList {
                 }
             }
         }
+        // Kitchen should not get notifications.
+        //if(!KitchenMenuActivity.active)
         notification.execute();
 
         OrderStatus.updateView();

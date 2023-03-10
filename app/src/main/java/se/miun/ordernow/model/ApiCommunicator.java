@@ -46,32 +46,26 @@ public class ApiCommunicator {
         });
     }
 
-    // DEBUGGING:
-    public void test(List<OrderItem> orders, final OrderStatus activity) {
-        // Print request Body
-        GsonConverterFactory factory = GsonConverterFactory.create();
-        Gson gson = new Gson();
-        System.out.println("Request body: " + gson.toJson(orders));
-
-        Call<ResponseBody> call = apiInstance.testPost(orders);
-        call.enqueue(new Callback<ResponseBody>() {
+    public void fillTableList() {
+        Call<List<Table>> call = apiInstance.getTables();
+        call.enqueue(new Callback<List<Table>>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.body() == null) {
-                    System.out.println("Response body was null");
+            public void onResponse(Call<List<Table>> call, Response<List<Table>> response) {
+                List<Table> tableList = response.body();
+                if(tableList == null) {
+                    System.out.println("fillTableList() -> Error: Api Response list was null");
                     return;
                 }
-                try {
-                    System.out.print("Response: ");
-                    System.out.println(response.body().string());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+
+                TableList localTableList = new TableList();
+                localTableList.addTables(tableList);
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+            public void onFailure(Call<List<Table>> call, Throwable t) {
+                System.out.println("API Response error while fetching tables. Filling TableList with fallback method.");
+                TableList localTableList = new TableList();
+                localTableList.addTables(TableList.DEFAULT_TABLE_COUNT, TableList.DEFAULT_TABLE_SIZE);
             }
         });
     }
