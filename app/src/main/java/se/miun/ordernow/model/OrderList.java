@@ -4,8 +4,9 @@ package se.miun.ordernow.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.miun.ordernow.view.OrderStatus;
+import se.miun.ordernow.view.OrderStatusActivity;
 
+// Represents a list OrderItems
 public class OrderList {
     private ArrayList<OrderItem> list;
 
@@ -16,6 +17,7 @@ public class OrderList {
     public ArrayList<OrderItem> getList() {
         return list;
     }
+    // Adds an OrderItem in a sorted fashion
     public void add(OrderItem element) {
         if(list.size() == 0) {
             list.add(element);
@@ -35,19 +37,11 @@ public class OrderList {
         return list.get(index);
     }
 
-    private int getNextType(int index) {
-        MenuItem.Type type = list.get(index).getType();
-        for(int i = index; i < list.size(); ++i) {
-            if(list.get(i).getType() != type)
-                return i;
-        }
-
-        return -1;
-    }
-
-    // Updates state by changing status for orders that are ready to done
-    // And sends the next orders with the next ordertype to kitchen by changing status from hold to cook.
-    public void updateOrderStatus(final OrderStatus orderStatusActivity) {
+    // Updates the status of OrderItems in list.
+    // Prioritise "lesser" types. So Appetizer -> Main -> Dessert.
+    // Focuses on one type at a time. So if there exists Appetizers in list, it will update only those types until they are done.
+    // When an OrderItem is in HOLD status we send them to the api, and upon a successful api response we update the status.
+    public void updateOrderStatus(final OrderStatusActivity orderStatusActivity) {
         boolean updated = false;
 
         for(OrderItem order: list) {
@@ -57,7 +51,7 @@ public class OrderList {
             switch(currentStatus) {
                 case HOLD: {
                     // Send all order with the same type to kitchen via API.
-                    // Find all orders with same type and add them so the list that will be sent over API.
+                    // Find all orders with same type (and status) and add them so the list that will be sent over API.
                     List<OrderItem> ordersToSend = new ArrayList<>();
                     for(OrderItem nextOrder: list) {
                         if(nextOrder.getType().equals(currentType) && nextOrder.getStatus().equals(currentStatus)) {
@@ -107,6 +101,9 @@ public class OrderList {
     public int size() {
         return list.size();
     }
+    public boolean isEmpty() {
+        return list.isEmpty();
+    }
 
     public void printList() {
         for(OrderItem o: list) {
@@ -114,6 +111,7 @@ public class OrderList {
         }
     }
 
+    // Checks if there exists orderitems that are in a ready state.
     public boolean ordersReady() {
         for(OrderItem item: list) {
             if(item.getStatus() == OrderItem.Status.READY) {
@@ -123,8 +121,20 @@ public class OrderList {
         return false;
     }
 
+    // Takes in position of the OrderItem that we want to go from.
+    // Returns the index for the next OrderItem thats type is greater than that of the OrderItem that was given.
+    private int getNextType(int index) {
+        MenuItem.Type type = list.get(index).getType();
+        for(int i = index; i < list.size(); ++i) {
+            if(list.get(i).getType() != type)
+                return i;
+        }
+
+        return -1;
+    }
+
     // Code below is for when we have sync list structure.
-    public void sendAllOrders(final OrderStatus activity) {
+    public void sendAllOrders(final OrderStatusActivity activity) {
         if(list.size() == 0)
             return;
 
@@ -143,7 +153,7 @@ public class OrderList {
         activity.updateView();
     }
 
-    public void nextListState(final OrderStatus activity) {
+    public void nextListState(final OrderStatusActivity activity) {
         if(list.size() == 0)
             return;
 

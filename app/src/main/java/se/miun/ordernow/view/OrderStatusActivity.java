@@ -18,7 +18,7 @@ import se.miun.ordernow.model.MasterOrderList;
 import se.miun.ordernow.model.OrderItem;
 import se.miun.ordernow.model.OrderList;
 
-public class OrderStatus extends AppCompatActivity {
+public class OrderStatusActivity extends AppCompatActivity {
     private static Context context;
     private static MasterOrderList masterList;
     private static int tableNumber;
@@ -50,7 +50,7 @@ public class OrderStatus extends AppCompatActivity {
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent switchActivity = new Intent(OrderStatus.this, OrderMenu.class);
+                Intent switchActivity = new Intent(OrderStatusActivity.this, OrderMenuActivity.class);
                 switchActivity.putExtra("tableNumber", tableNumber);
                 startActivity(switchActivity);
             }
@@ -62,7 +62,7 @@ public class OrderStatus extends AppCompatActivity {
         readyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentTableOrderList.updateOrderStatus(OrderStatus.this);
+                currentTableOrderList.updateOrderStatus(OrderStatusActivity.this);
                 updateView();
             }
         });

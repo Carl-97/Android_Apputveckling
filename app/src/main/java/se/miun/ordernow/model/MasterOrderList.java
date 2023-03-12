@@ -5,13 +5,17 @@ import java.util.List;
 
 import se.miun.ordernow.controller.MainActivity;
 import se.miun.ordernow.controller.OrderStatusNotification;
-import se.miun.ordernow.view.KitchenMenuActivity;
-import se.miun.ordernow.view.OrderStatus;
+import se.miun.ordernow.view.OrderStatusActivity;
 
+// This is our local list of all OrderItems currently in the system.
+// (For now it only contains OrderItems that was created locally)
+// MasterOrderList is a "centralized" list so we can have several Activities that uses the same data storage.
+// It contains a list of OrderList where each OrderList is bound to a table. Ex. Table 4 always uses the fourth OrderList in the masterList.
 public class MasterOrderList {
     public static final int MAXIMUM_TABLES = 8;
     private static List<OrderList> masterList = null;
 
+    // We statically create 8 OrderList and hope we do now have more tables than that.
     public MasterOrderList() {
         if(masterList == null) {
             masterList = new ArrayList<>();
@@ -27,7 +31,6 @@ public class MasterOrderList {
             masterList.add(new OrderList());
         }
     }
-
     public void clearOrderList(int index) {
         masterList.get(index).getList().clear();
     }
@@ -36,12 +39,9 @@ public class MasterOrderList {
         return masterList.get(tableIndex);
     }
 
-    // I have seen better looking functions...
-    // ToDo: This should add new orders that have come in from other clients/waiters, And also update existing orders that have been completed in the kitchen.
-    // How should we handle this?? Should MasterOrderList be synchronized between multiple clients
-    // Or should they be local only, this way we get that each waiter only receives notification for their tables and not ALL.
-    // Either way, it seems to me that we need to have a unique identifier for each OrderItem so we know which item was updated
-    // as there can exist multiple items from the same table that "come from" the same MenuItem and has the same description.
+
+    // We compare the inputList with are masterList for status changes for each OrderItem.
+    // If an OrderItem is updated we change its status to Ready and send a notification to the user.
     public void updateOrderStatusByList(List<OrderItem> inputList) {
         boolean updated = false;
 
@@ -55,17 +55,18 @@ public class MasterOrderList {
                     if(localItem.getStatus() == OrderItem.Status.COOK) {
                         // Send notification here also
                         localItem.nextStatus();
-
                         notification.add(localItem);
+
+                        updated = true;
                     }
                     break;
                 }
             }
         }
-        // Kitchen should not get notifications.
-        //if(!KitchenMenuActivity.active)
-        notification.execute();
 
-        OrderStatus.updateView();
+        if(updated) {
+            notification.execute();
+            OrderStatusActivity.updateView();
+        }
     }
 }

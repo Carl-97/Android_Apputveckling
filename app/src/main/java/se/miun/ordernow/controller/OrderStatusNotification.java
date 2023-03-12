@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,9 +19,12 @@ import java.util.List;
 import se.miun.ordernow.R;
 import se.miun.ordernow.model.OrderItem;
 import se.miun.ordernow.view.FloorActivity;
-import se.miun.ordernow.view.OrderStatus;
+import se.miun.ordernow.view.OrderStatusActivity;
 import se.miun.ordernow.view.TableChoiceActivity;
 
+// Class for creating notifications for OrderItems that are ready to serve.
+// Create an object, add however many items you want, then run execute.
+// It will group the OrderItems by table, and create a notification for each group.
 public class OrderStatusNotification {
     private int notificationId;
     private Context context;
@@ -47,6 +49,7 @@ public class OrderStatusNotification {
         }
     }
 
+    // Creates the notification channel
     private void createNotificationChannel() {
         notificationChannelId = "channel_1";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -62,10 +65,14 @@ public class OrderStatusNotification {
         }
     }
 
+    // Adds OrderItems that we want to create a notification for.
     public void add(OrderItem item) {
         updatedItems.add(item);
     }
 
+    // Executes notifications with the list of updated items.
+    // Groups the list of updated items by tableId
+    // Then pushes each group to a notification.
     public void execute() {
         if(updatedItems.size() == 0)
             return;
@@ -96,18 +103,22 @@ public class OrderStatusNotification {
         }
     }
 
+    // Creates a notification that display what table,
+    // and that the given items are ready to serve.
     private void pushNotification(List<OrderItem> items) {
         // Backstack for the next activity.
         Intent mainActivityIntent = new Intent(context, MainActivity.class);
         Intent floorActivityIntent = new Intent(context, FloorActivity.class);
         Intent tableChooseActivityIntent = new Intent(context, TableChoiceActivity.class);
 
-        Intent primaryIntent = new Intent(context, OrderStatus.class);
+        Intent primaryIntent = new Intent(context, OrderStatusActivity.class);
         primaryIntent.putExtra("tableNumber", items.get(0).getTableNumber());
 
-        PendingIntent pendingIntent = PendingIntent.getActivities(context, 0,
+        // This pendingIntent is attached to the notification, upon pressing the notification the application will switch to this intent.
+        PendingIntent pendingIntent = PendingIntent.getActivities(context, notificationId,
                 new Intent[]{mainActivityIntent, floorActivityIntent, tableChooseActivityIntent, primaryIntent}, PendingIntent.FLAG_ONE_SHOT);
 
+        // Create the content for the notification to display.
         String title = "Table " + items.get(0).getTableNumber();
         String content = "";
         for(int i = 0; i < items.size(); ++i) {

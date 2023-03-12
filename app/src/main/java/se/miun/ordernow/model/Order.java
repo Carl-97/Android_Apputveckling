@@ -4,6 +4,8 @@ package se.miun.ordernow.model;
 import java.util.ArrayList;
 import java.util.List;
 
+// Represents an Order.
+// This is used by the kitchen adapter.
 public class Order {
     private int orderNumber;
     private List<OrderItem> items;

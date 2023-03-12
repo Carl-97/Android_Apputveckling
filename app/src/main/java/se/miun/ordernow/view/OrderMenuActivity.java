@@ -16,13 +16,11 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.List;
 
 import se.miun.ordernow.R;
-import se.miun.ordernow.model.BackgroundApiFetcher;
 import se.miun.ordernow.model.MasterOrderList;
-import se.miun.ordernow.model.MenuItem;
 import se.miun.ordernow.model.MenuList;
 import se.miun.ordernow.model.OrderList;
 
-public class OrderMenu extends AppCompatActivity {
+public class OrderMenuActivity extends AppCompatActivity {
     MenuList menuList;
     private RecyclerView recyclerView;
     private static OrderMenuRecyclerAdapter orderMenuRecyclerAdapter;

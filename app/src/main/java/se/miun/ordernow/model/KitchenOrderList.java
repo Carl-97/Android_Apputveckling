@@ -6,17 +6,14 @@ import java.util.List;
 import se.miun.ordernow.view.KitchenMenuActivity;
 import se.miun.ordernow.view.OrderItemAdapter;
 
+// KitchenOrderList contains a list of Order which in itself contains a list of OrderItems.
+// This is the list that kitchen uses to display what OrderItems should be cooked.
 public class KitchenOrderList {
     private static List<Order> orderList;
-
-    // In case the POST from kitchen happens at the same time as
-    // the GET from background updater.
-    private static List<OrderItem> recentlyRemovedOrders;
 
     public KitchenOrderList() {
         if(orderList == null) {
             orderList = new ArrayList<>();
-            recentlyRemovedOrders = new ArrayList<>();
         }
     }
 
@@ -34,10 +31,7 @@ public class KitchenOrderList {
         orderList.remove(index);
     }
 
-    public List<OrderItem> getRecentlyRemovedOrders() {
-        return recentlyRemovedOrders;
-    }
-
+    // Adds an OrderItem if it does not yet exist in the orderList.
     public void addItem(OrderItem item) {
         if(item.hasBeenCooked())
             return;
@@ -68,15 +62,18 @@ public class KitchenOrderList {
             KitchenMenuActivity.updateAdapter();
     }
 
-    public void removeEmptyOrders(OrderItemAdapter adapter) {
+    // Removes Order objects with an empty list.
+    public void removeEmptyOrders() {
         for(int i = 0; i < orderList.size(); ++i) {
             if(orderList.get(i).size() == 0) {
-                System.out.println("Removing Order: " + orderList.get(i).getOrderNumber());
                 orderList.remove(i);
             }
         }
     }
 
+    // Some weird stuff happens with the kitchen adapters that use reference to our lists.
+    // So sometimes they are left with a reference that no longer works, in that case they can call us for a new one.
+    // Given that there exists an Order that is bound to the given tableNumber.
     public List<OrderItem> requestNewReference(int tableNumber) {
         for(Order order: orderList) {
             if(order.getOrderNumber() == tableNumber)
@@ -85,6 +82,7 @@ public class KitchenOrderList {
         return null;
     }
 
+    // For debugging
     public void printCurrentOrderNumbers() {
         System.out.print("{");
         for(int i = 0; i < orderList.size(); ++i) {
@@ -93,5 +91,25 @@ public class KitchenOrderList {
             System.out.print(orderList.get(i).getOrderNumber());
         }
         System.out.println("}");
+    }
+
+    // For debugging
+    public static void print() {
+        System.out.print("KitchenOrderList content: [");
+        for(int i = 0; i < orderList.size(); ++i) {
+            if(i != 0)
+                System.out.print(", ");
+
+            Order order = orderList.get(i);
+            System.out.print("{Order: " + order.getOrderNumber() + ", array: [");
+            for(int j = 0; j < order.size(); ++j) {
+                if(j != 0)
+                    System.out.print(", ");
+                OrderItem item = order.getItems().get(j);
+                System.out.print("{" + item.getName() + ", " + item.getId() + "}");
+            }
+            System.out.print("]}");
+        }
+        System.out.println("]");
     }
 }

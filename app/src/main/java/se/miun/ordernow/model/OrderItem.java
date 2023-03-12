@@ -101,13 +101,16 @@ public class OrderItem {
         return table;
     }
 
-    public void nextStatus() { status = status.next(); }
-
+    // Change the status to the next one "ordinally"
+    public void nextStatus() {
+        status = status.next();
+    }
 
     public String toString() {
         return menuItem.getName() + " " + description;
     }
 
+    // Compares the Type's and Statuses of the items, in that order, using the enum.ordinal().
     public boolean lessThan(OrderItem rhs) {
         int difference = this.getType().ordinal() - rhs.getType().ordinal();
         // If Type is the same, look at status.
@@ -120,26 +123,8 @@ public class OrderItem {
         return true;
     }
 
+    // Uses id as comparison.
     public boolean equals(OrderItem rhs) {
         return getId() == rhs.getId();
-    }
-
-    public void print() {
-        if(menuItem != null) {
-            menuItem.print();
-        }
-        else
-            System.out.println("MenuItem: null");
-
-        System.out.print("Order description: ");
-        if(description == null)
-            System.out.println("null");
-        else
-            System.out.println(description);
-
-        if(table != null)
-            table.print();
-        else
-            System.out.println("Table: null");
     }
 }

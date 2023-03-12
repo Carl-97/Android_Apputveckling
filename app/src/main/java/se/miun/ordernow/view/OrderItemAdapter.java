@@ -18,8 +18,8 @@ import se.miun.ordernow.model.Order;
 import se.miun.ordernow.model.OrderItem;
 
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyViewHolder> {
-    private List<OrderItem> itemList;
-    private int tableNumber;
+    public List<OrderItem> itemList;
+    public int tableNumber;
     private OrderItemAdapter.RecyclerViewClickListener listener;
 
     public OrderItemAdapter(List<OrderItem> itemList, OrderItemAdapter.RecyclerViewClickListener listener) {
@@ -36,35 +36,44 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView itemTypeName;
         private TextView itemName;
         private TextView itemDescription;
-
-        private OrderItem item;
+        private TextView itemTypeName;
 
         private Button readyButton;
 
+        private OrderItem item;
+
+
+        public int table = 0;
+
         public MyViewHolder(final View view){
             super(view);
-            //view.setOnClickListener(this);
-            readyButton = view.findViewById(R.id.itemReadyButton);
-            itemTypeName = view.findViewById(R.id.itemMealTypeTextView);
+
             itemName = view.findViewById(R.id.itemMealNameTextView);
             itemDescription =view.findViewById(R.id.itemMealDescriptionTextView);
+            itemTypeName = view.findViewById(R.id.itemMealTypeTextView);
 
+            readyButton = view.findViewById(R.id.itemReadyButton);
             readyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Send item to api
-                    System.out.println("Ready button was clicked!");
-                    System.out.println("Sending item: " + item.getName() + " to API");
+                    // DEBUGGING STUFF
+                    System.out.println("Adapter table: " + tableNumber);
+                    System.out.println("Item connected to ready button. name: " + item.getName() + ", id: " + item.getId() + ", table: " + item.getTableNumber());
+
+                    // The OrderItemAdapter itemList is out of sync, and the adapter does not know what tableNumber it belongs to?
+                    // Only the ViewHolder is working as it should, so we take information from it and send to the adapter.
+                    if(OrderItemAdapter.this.itemList.size() == 0) {
+                        System.out.println("Fetching new list reference");
+                        OrderItemAdapter.this.resyncItemList(item.getTableNumber());
+                    }
+
                     ApiCommunicator apiCommunicator = new ApiCommunicator();
                     apiCommunicator.postOrderItemCooked(OrderItemAdapter.this, itemList, getAbsoluteAdapterPosition(), item);
                 }
             });
         }
-
-
     }
 
     @NonNull
@@ -78,14 +87,14 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
     public void onBindViewHolder(@NonNull OrderItemAdapter.MyViewHolder holder, int position) {
         holder.item = itemList.get(position);
 
-        String itemType = itemList.get(position).getType().toString();
-        holder.itemTypeName.setText("Type: " + itemType);
+        String itemName = holder.item.getName();
+        holder.itemName.setText(itemName);
 
-        String itemName = itemList.get(position).getName();
-        holder.itemName.setText("Meal: " + itemName);
-
-        String itemDescription = itemList.get(position).getDescription();
+        String itemDescription = holder.item.getDescription();
         holder.itemDescription.setText(itemDescription);
+
+        String itemType = holder.item.getType().toString();
+        holder.itemTypeName.setText("Type: " + itemType);
     }
 
     @Override
@@ -93,24 +102,27 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
         return itemList.size();
     }
 
+    public void resyncItemList(int tableId) {
+        KitchenOrderList masterKitchenList = new KitchenOrderList();
+        List<OrderItem> tempList = masterKitchenList.requestNewReference(tableId);
+
+        if(tempList == null) {
+            System.out.println("Null reference list for tablenumber: " + tableId);
+            return;
+        }
+
+        itemList = tempList;
+    }
+
     public void removeItem(OrderItem item) {
         // When the order is empty we remove the list.
         // This cause our itemList to not function properly because it was a reference to that list.
         // So in case try to remove an item while the itemList is empty we need a new reference to the new orderlist.
         if(itemList.size() == 0) {
-            KitchenOrderList masterKitchenList = new KitchenOrderList();
-            List<OrderItem> tempList = masterKitchenList.requestNewReference(tableNumber);
-            if(tempList == null) {
-                System.out.println("Null reference list for tablenumber: " + tableNumber);
-                masterKitchenList.printCurrentOrderNumbers();
-            }
-            else
-                itemList = tempList;
+            resyncItemList(tableNumber);
         }
 
         boolean itemRemoved = false;
-
-        System.out.println("removeItem call");
 
         for(int i = 0; i < itemList.size(); ++i) {
             if(item.equals(itemList.get(i))) {
@@ -132,9 +144,8 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
         if(itemList.size() == 0) {
             System.out.println("list is empty, removing it.");
             KitchenOrderList kitchenList = new KitchenOrderList();
-            kitchenList.removeEmptyOrders(this);
+            kitchenList.removeEmptyOrders();
             KitchenMenuActivity.updateAdapter();
-            System.out.println(itemList);
         }
     }
 
@@ -142,8 +153,8 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyVi
         if(itemList.size() == 0) {
             System.out.println("Order is empty, removing order");
             KitchenOrderList kitchenList = new KitchenOrderList();
-            kitchenList.removeEmptyOrders(this);
+            kitchenList.removeEmptyOrders();
         }
-        notifyDataSetChanged();
+        KitchenMenuActivity.updateAdapter();
     }
 }

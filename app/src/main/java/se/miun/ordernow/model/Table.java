@@ -1,12 +1,13 @@
 package se.miun.ordernow.model;
 
+// Represents a table in the restaurant
 public class Table {
     private int tableId = 0;
-    private int tablesize = 0;
+    private int tableSize = 0;
 
     public Table(int id, int size) {
         this.tableId = id;
-        this.tablesize = size;
+        this.tableSize = size;
     }
 
     public int getTableId() {
@@ -17,14 +18,15 @@ public class Table {
         this.tableId = tableId;
     }
 
-    public int getTablesize() {
-        return tablesize;
+    public int getTableSize() {
+        return tableSize;
     }
 
-    public void setTablesize(int tablesize) {
-        this.tablesize = tablesize;
+    public void setTableSize(int tableSize) {
+        this.tableSize = tableSize;
     }
 
+    // For debugging
     public void print() {
         System.out.print("table id: ");
         if(tableId == 0)
@@ -33,9 +35,9 @@ public class Table {
             System.out.println(tableId);
 
         System.out.print("table size: ");
-        if(tablesize == 0)
+        if(tableSize == 0)
             System.out.println("null");
         else
-            System.out.println(tablesize);
+            System.out.println(tableSize);
     }
 }

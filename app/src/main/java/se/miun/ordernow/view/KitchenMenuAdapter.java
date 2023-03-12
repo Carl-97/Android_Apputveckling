@@ -33,14 +33,12 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        private TextView orderNumber;
         private TextView tableNumber;
         private RecyclerView itemsList;
         private Button cancelButton;
 
         public MyViewHolder(final View view){
             super(view);
-            orderNumber = view.findViewById(R.id.orderNumbertextView);
             tableNumber = view.findViewById(R.id.tableNumberTextView);
             itemsList = view.findViewById(R.id.orderItemsRecyclerView);
             cancelButton = view.findViewById(R.id.OrderCancelButton);
@@ -64,11 +62,8 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
     public void onBindViewHolder(@NonNull KitchenMenuAdapter.MyViewHolder holder, int position) {
         Order order = orderList.getOrder(position);
 
-        String orderNumber = String.valueOf(order.getOrderNumber());
-        holder.orderNumber.setText("Order: " + orderNumber);
-
         String tableNumber = String.valueOf(order.getTable().getTableId());
-        holder.tableNumber.setText("Table: " + tableNumber);
+        holder.tableNumber.setText("Table " + tableNumber);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 holder.itemsList.getContext(),

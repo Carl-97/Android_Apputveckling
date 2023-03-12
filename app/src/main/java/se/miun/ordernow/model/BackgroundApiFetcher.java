@@ -5,15 +5,14 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+// Background thread that updates local lists from database.
 public class BackgroundApiFetcher {
     private static final int LOOP_DELAY_MS = 5000;
     private static Timer timer = null;
-    private static MasterOrderList masterOrderList;
     private static ApiCommunicator apiCommunicator;
 
     public BackgroundApiFetcher() {
         if(timer == null) {
-            masterOrderList = new MasterOrderList();
             apiCommunicator = new ApiCommunicator();
 
             timer = new Timer();

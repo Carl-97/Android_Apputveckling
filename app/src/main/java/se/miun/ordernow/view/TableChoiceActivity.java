@@ -9,11 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import se.miun.ordernow.R;
-import se.miun.ordernow.model.Table;
 import se.miun.ordernow.model.TableList;
 
 public class TableChoiceActivity extends AppCompatActivity {
@@ -35,8 +31,7 @@ public class TableChoiceActivity extends AppCompatActivity {
         listner = new RecyclerAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
-                System.out.println("YeS! YOU CLICked!");
-                Intent intent = new Intent(getApplicationContext(), OrderStatus.class);
+                Intent intent = new Intent(getApplicationContext(), OrderStatusActivity.class);
                 intent.putExtra("tableNumber", position + 1);
                 startActivity(intent);
             }

@@ -17,14 +17,14 @@
         android:theme="@style/Theme.OrderNow"
         tools:targetApi="31">
         <activity
-            android:name=".view.OrderStatus"
+            android:name=".view.OrderStatusActivity"
             android:exported="false" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controller.MainActivity" />
         </activity>
         <activity
-            android:name=".view.OrderMenu"
+            android:name=".view.OrderMenuActivity"
             android:exported="false" />
         <activity
             android:name=".view.KitchenMenuActivity"

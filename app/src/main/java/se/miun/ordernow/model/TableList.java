@@ -6,6 +6,7 @@ import java.util.List;
 import se.miun.ordernow.model.Table;
 import se.miun.ordernow.view.TableChoiceActivity;
 
+// Contains all tables in the restaurant.
 public class TableList {
     private static List<Table> tableList;
 
@@ -21,12 +22,15 @@ public class TableList {
         }
     }
 
+    // Adds table to list.
     public void addTables(List<Table> list) {
         tableList.addAll(list);
 
         TableChoiceActivity.updateAdapter();
     }
 
+    // Adds a given amount of tables with given size.
+    // Used as backup for if the api fails.
     public void addTables(int tableCount, int tableSize) {
         for(int i = 1; i <= tableCount; ++i) {
             tableList.add(new Table(i, tableSize));

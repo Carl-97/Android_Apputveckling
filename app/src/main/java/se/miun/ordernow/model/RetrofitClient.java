@@ -3,6 +3,7 @@ package se.miun.ordernow.model;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+// Retrofit class that creates our Api handle for us.
 public class RetrofitClient {
     private static RetrofitClient instance = null;
     private Api myApi;
