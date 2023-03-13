@@ -123,8 +123,6 @@ public class ApiCommunicator {
                     System.out.println("getAllOrder() -> Null orderlist response");
                     return;
                 }
-                System.out.println("Fetching order from database, list size: " + list.size());
-
 
                 MasterOrderList masterList = new MasterOrderList();
                 masterList.updateOrderStatusByList(list);

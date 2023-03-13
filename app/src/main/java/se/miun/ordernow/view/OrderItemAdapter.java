@@ -20,12 +20,7 @@ import se.miun.ordernow.model.OrderItem;
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.MyViewHolder> {
     public List<OrderItem> itemList;
     public int tableNumber;
-    private OrderItemAdapter.RecyclerViewClickListener listener;
 
-    public OrderItemAdapter(List<OrderItem> itemList, OrderItemAdapter.RecyclerViewClickListener listener) {
-        this.itemList = itemList;
-        this.listener = listener;
-    }
     public OrderItemAdapter(List<OrderItem> itemList, int tableNumber) {
         System.out.println("Constructing adapter with tableNumber: " + tableNumber);
         this.itemList = itemList;

@@ -34,12 +34,6 @@
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false" />
 
-        <Button
-            android:id="@+id/OrderCancelButton"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Cancel" />
-
     </LinearLayout>
 
     </androidx.cardview.widget.CardView>

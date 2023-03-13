@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,21 +36,12 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
     public class MyViewHolder extends RecyclerView.ViewHolder{
         private TextView tableNumber;
         private RecyclerView itemsList;
-        private Button cancelButton;
 
         public MyViewHolder(final View view){
             super(view);
             tableNumber = view.findViewById(R.id.tableNumberTextView);
             itemsList = view.findViewById(R.id.orderItemsRecyclerView);
-            cancelButton = view.findViewById(R.id.OrderCancelButton);
-
-            view.findViewById(R.id.OrderCancelButton).setOnClickListener(view1 -> {
-                orderList.remove(getAbsoluteAdapterPosition());
-                notifyItemRemoved(getAbsoluteAdapterPosition());
-            });
         }
-
-
     }
     @NonNull
     @Override
@@ -80,6 +72,7 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
         holder.itemsList.setLayoutManager(layoutManager);
         holder.itemsList.setAdapter(orderItemAdapter);
         holder.itemsList.setRecycledViewPool(viewPool);
+        holder.itemsList.addItemDecoration(new DividerItemDecoration(holder.itemsList.getContext(),DividerItemDecoration.VERTICAL));
     }
 
     @Override

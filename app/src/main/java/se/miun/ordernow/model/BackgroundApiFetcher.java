@@ -7,7 +7,7 @@ import java.util.TimerTask;
 
 // Background thread that updates local lists from database.
 public class BackgroundApiFetcher {
-    private static final int LOOP_DELAY_MS = 5000;
+    private static final int LOOP_DELAY_MS = 1000;
     private static Timer timer = null;
     private static ApiCommunicator apiCommunicator;
 
