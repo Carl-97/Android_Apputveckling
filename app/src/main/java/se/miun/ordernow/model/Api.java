@@ -11,7 +11,7 @@ import retrofit2.http.Path;
 
 // Our API calls.
 public interface Api {
-    String IP = "192.168.1.162";
+    String IP = "10.82.228.147";
     String BASE_URL = "http://" + IP + ":8080/Java_Apputveckling-1.0-SNAPSHOT/api/v1/";
 
     // Fetches all MenuItems

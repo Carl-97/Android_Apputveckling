@@ -10,7 +10,7 @@ public class MenuItem {
     @SerializedName("name")
     private String name;
 
-    @SerializedName("itemId")
+    @SerializedName("id")
     private long id = 0;
 
     @SerializedName("description")

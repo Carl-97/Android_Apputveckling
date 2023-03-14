@@ -9,12 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 import se.miun.ordernow.R;
 import se.miun.ordernow.model.MasterOrderList;
 import se.miun.ordernow.model.OrderList;
-import se.miun.ordernow.model.Table;
 import se.miun.ordernow.model.TableList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
@@ -53,7 +50,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
-        String name = "Table " + String.valueOf(tablesList.getTable(position).getTableId());
+        String name = "Table " + String.valueOf(tablesList.getTable(position).getId());
         holder.tableNameText.setText(name);
         setTableNameTextColor(holder.tableNameText, position);
     }

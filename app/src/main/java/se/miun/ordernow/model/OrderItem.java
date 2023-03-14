@@ -17,7 +17,7 @@ public class OrderItem {
             return ordinal() < status.ordinal();
         }
     }
-    @SerializedName("ordersId")
+    @SerializedName("id")
     private int orderItemId = 0;
     @SerializedName("note")
     private String description;
@@ -94,7 +94,7 @@ public class OrderItem {
         if(table == null)
             return 0;
 
-        return table.getTableId();
+        return table.getId();
     }
 
     public Table getTable() {

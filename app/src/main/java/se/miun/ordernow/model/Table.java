@@ -1,43 +1,47 @@
 package se.miun.ordernow.model;
 
+import com.google.gson.annotations.SerializedName;
+
 // Represents a table in the restaurant
 public class Table {
-    private int tableId = 0;
-    private int tableSize = 0;
+    @SerializedName("id")
+    private int id = 0;
+    @SerializedName("tableSize")
+    private int size = 0;
 
     public Table(int id, int size) {
-        this.tableId = id;
-        this.tableSize = size;
+        this.id = id;
+        this.size = size;
     }
 
-    public int getTableId() {
-        return tableId;
+    public int getId() {
+        return id;
     }
 
-    public void setTableId(int tableId) {
-        this.tableId = tableId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getTableSize() {
-        return tableSize;
+    public int getSize() {
+        return size;
     }
 
-    public void setTableSize(int tableSize) {
-        this.tableSize = tableSize;
+    public void setSize(int size) {
+        this.size = size;
     }
 
     // For debugging
     public void print() {
         System.out.print("table id: ");
-        if(tableId == 0)
+        if(id == 0)
             System.out.println("null");
         else
-            System.out.println(tableId);
+            System.out.println(id);
 
         System.out.print("table size: ");
-        if(tableSize == 0)
+        if(size == 0)
             System.out.println("null");
         else
-            System.out.println(tableSize);
+            System.out.println(size);
     }
 }

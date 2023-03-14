@@ -3,7 +3,6 @@ package se.miun.ordernow.view;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,12 +10,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 import se.miun.ordernow.R;
 import se.miun.ordernow.model.KitchenOrderList;
 import se.miun.ordernow.model.Order;
-import se.miun.ordernow.model.OrderItem;
 
 public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.MyViewHolder> {
     private KitchenOrderList orderList;
@@ -54,7 +50,7 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
     public void onBindViewHolder(@NonNull KitchenMenuAdapter.MyViewHolder holder, int position) {
         Order order = orderList.getOrder(position);
 
-        String tableNumber = String.valueOf(order.getTable().getTableId());
+        String tableNumber = String.valueOf(order.getTable().getId());
         holder.tableNumber.setText("Table " + tableNumber);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(
@@ -64,10 +60,10 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
         );
         layoutManager.setInitialPrefetchItemCount(order.getItems().size());
 
-        System.out.println("Binding order: " + order.getTable().getTableId());
+        System.out.println("Binding order: " + order.getTable().getId());
         System.out.println("On position: " + position);
 
-        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(order.getItems(), order.getTable().getTableId());
+        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(order.getItems(), order.getTable().getId());
 
         holder.itemsList.setLayoutManager(layoutManager);
         holder.itemsList.setAdapter(orderItemAdapter);
