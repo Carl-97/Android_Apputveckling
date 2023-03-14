@@ -3,8 +3,9 @@ package se.miun.ordernow.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.miun.ordernow.view.OrderMenu;
+import se.miun.ordernow.view.OrderMenuActivity;
 
+// MenuList is the list of MenuItems that we display in our order menu.
 public class MenuList {
     private static List<MenuItem> appetizers = null;
     private static List<MenuItem> mainDishes = null;
@@ -16,6 +17,7 @@ public class MenuList {
         }
     }
 
+    // On initialization we ask the api for the current menu offered.
     private void initMenuList() {
         appetizers = new ArrayList<>();
         mainDishes = new ArrayList<>();
@@ -25,27 +27,17 @@ public class MenuList {
         apiCommunicator.fillMenuList();
     }
 
-    public void refreshMenuList() {
-        appetizers.clear();
-        mainDishes.clear();
-        desserts.clear();
-
-        ApiCommunicator apiCommunicator = new ApiCommunicator();
-        apiCommunicator.fillMenuList();
-    }
-
     public List<MenuItem> getAppetizers() {
         return appetizers;
     }
-
     public List<MenuItem> getMainDishes() {
         return mainDishes;
     }
-
     public List<MenuItem> getDesserts() {
         return desserts;
     }
 
+    // Adds MenuItem to the correct list.
     public void addMenuList(List<MenuItem> menuList) {
         for(MenuItem item: menuList) {
             MenuItem.Type type = item.getCategory();
@@ -61,11 +53,10 @@ public class MenuList {
                     desserts.add(item);
                     break;
                 default:
-                    System.out.println("tried to add unrecognized item type in menulist");
             }
         }
 
         // If ordermenu is open we must update adapters.
-        OrderMenu.updateAdapters();
+        OrderMenuActivity.updateAdapters();
     }
 }

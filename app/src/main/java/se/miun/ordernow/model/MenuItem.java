@@ -2,9 +2,10 @@ package se.miun.ordernow.model;
 
 import com.google.gson.annotations.SerializedName;
 
+// This represents a MenuItem in our order menu.
 public class MenuItem {
     public enum Type {
-        APPETIZER, MAINDISH, DESSERT
+        APPETIZER, MAINDISH, DESSERT, DRINK
     }
     @SerializedName("name")
     private String name;
@@ -29,7 +30,6 @@ public class MenuItem {
         this.price = price;
     }
 
-
     public int getPrice() {
         return price;
     }
@@ -38,8 +38,10 @@ public class MenuItem {
         this.price = price;
     }
 
+    // Converts our String variable to a Type enum.
+    // Not certain if GSON will be confused if we send enums over api.
     public Type getCategory() {
-        Type type;
+        Type type = Type.DRINK;
         switch(category) {
             case "F":
                 type = Type.APPETIZER;
@@ -50,21 +52,8 @@ public class MenuItem {
             case "E":
                 type = Type.DESSERT;
                 break;
-            default:
-                type = Type.APPETIZER;
         }
         return type;
-    }
-
-    public boolean isValid() {
-        boolean valid = true;
-        if(name == null)
-            valid = false;
-        else if(description == null)
-            valid = false;
-        else if(category == null)
-            valid = false;
-        return valid;
     }
 
     public void setCategory(String category) {
@@ -95,35 +84,15 @@ public class MenuItem {
         this.name = name;
     }
 
-    public void print() {
-        System.out.print("name: ");
+    // Debugging stuff
+    public boolean isValid() {
+        boolean valid = true;
         if(name == null)
-            System.out.println("null");
-        else
-            System.out.println(name);
-
-        System.out.print("id: ");
-        if(id == 0)
-            System.out.println("null");
-        else
-            System.out.println(id);
-
-        System.out.print("description: ");
-        if(description == null)
-            System.out.println("null");
-        else
-            System.out.println(description);
-
-        System.out.print("type: ");
-        if(category == null)
-            System.out.println("null");
-        else
-            System.out.println(category);
-
-        System.out.print("price: ");
-        if(price == 0)
-            System.out.println("null");
-        else
-            System.out.println(price);
+            valid = false;
+        else if(description == null)
+            valid = false;
+        else if(category == null)
+            valid = false;
+        return valid;
     }
 }

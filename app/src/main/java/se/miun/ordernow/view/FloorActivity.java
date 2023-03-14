@@ -1,7 +1,6 @@
 package se.miun.ordernow.view;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -23,11 +22,10 @@ public class FloorActivity extends AppCompatActivity {
         chooseTableBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(FloorActivity.this , TableChoiceActivity.class);
+                Intent intent = new Intent(FloorActivity.this, TableChoiceActivity.class);
                 startActivity(intent);
 
             }
         });
     }
-
 }

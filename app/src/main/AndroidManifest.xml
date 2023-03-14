@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,10 +17,14 @@
         android:theme="@style/Theme.OrderNow"
         tools:targetApi="31">
         <activity
-            android:name=".view.OrderStatus"
-            android:exported="false" />
+            android:name=".view.OrderStatusActivity"
+            android:exported="false" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controller.MainActivity" />
+        </activity>
         <activity
-            android:name=".view.OrderMenu"
+            android:name=".view.OrderMenuActivity"
             android:exported="false" />
         <activity
             android:name=".view.KitchenMenuActivity"
@@ -28,7 +34,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".controller.MainActivity2"
+            android:name=".controller.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

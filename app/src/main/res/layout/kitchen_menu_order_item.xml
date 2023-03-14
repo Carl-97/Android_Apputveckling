@@ -20,28 +20,19 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/orderNumbertextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Order#" />
-
-        <TextView
             android:id="@+id/tableNumberTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Table#" />
+            android:gravity="center"
+            android:text="Table#"
+            android:textSize="20dp"
+            android:textColor="#000000" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/orderItemsRecyclerView"
             android:layout_width="409dp"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false" />
-
-        <Button
-            android:id="@+id/OrderCancelButton"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Cancel" />
 
     </LinearLayout>
 

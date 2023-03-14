@@ -4,6 +4,8 @@ package se.miun.ordernow.model;
 import java.util.ArrayList;
 import java.util.List;
 
+// Represents an Order.
+// This is used by the kitchen adapter.
 public class Order {
     private int orderNumber;
     private List<OrderItem> items;
@@ -26,19 +28,22 @@ public class Order {
         this.items = new ArrayList<>();
     }
 
-    public void addItem(OrderItem item) {
+    public boolean addItem(OrderItem item) {
+        if(item.hasBeenCooked())
+            return false;
+
         boolean exists = false;
         for(int i = 0; i < items.size(); ++i) {
             if(item.getId() == items.get(i).getId()) {
-                System.out.println("This item already exists: " + item.getName() + " with id: " + item.getId());
                 exists = true;
                 break;
             }
         }
-        if(!exists) {
-            System.out.println("Added item to an order");
-            items.add(item);
-        }
+        if(exists)
+            return false;
+
+        items.add(item);
+        return true;
     }
 
     public int getOrderNumber() {
@@ -55,5 +60,9 @@ public class Order {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public int size() {
+        return items.size();
     }
 }

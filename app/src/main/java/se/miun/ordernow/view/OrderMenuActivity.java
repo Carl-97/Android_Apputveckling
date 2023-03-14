@@ -16,13 +16,11 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.List;
 
 import se.miun.ordernow.R;
-import se.miun.ordernow.model.BackgroundApiFetcher;
 import se.miun.ordernow.model.MasterOrderList;
-import se.miun.ordernow.model.MenuItem;
 import se.miun.ordernow.model.MenuList;
 import se.miun.ordernow.model.OrderList;
 
-public class OrderMenu extends AppCompatActivity {
+public class OrderMenuActivity extends AppCompatActivity {
     MenuList menuList;
     private RecyclerView recyclerView;
     private static OrderMenuRecyclerAdapter orderMenuRecyclerAdapter;
@@ -44,12 +42,12 @@ public class OrderMenu extends AppCompatActivity {
         setContentView(R.layout.activity_order_menu);
 
         Intent intent = getIntent();
-        tableNumber = intent.getIntExtra("tableNumber", 0);
+        tableNumber = intent.getIntExtra("tableNumber", 1);
 
         menuList = new MenuList();
 
         masterOrderList = new MasterOrderList();
-        OrderList currentTableOrderList = masterOrderList.getOrderList(tableNumber);
+        OrderList currentTableOrderList = masterOrderList.getOrderList(tableNumber - 1);
 
         orderCount = findViewById(R.id.numberOfOrders);
         orderCount.setText("Order Count: " + currentTableOrderList.size());

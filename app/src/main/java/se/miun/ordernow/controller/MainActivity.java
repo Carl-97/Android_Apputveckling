@@ -2,31 +2,27 @@ package se.miun.ordernow.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import se.miun.ordernow.R;
-import se.miun.ordernow.model.ApiCommunicator;
 import se.miun.ordernow.model.BackgroundApiFetcher;
-import se.miun.ordernow.model.MenuItem;
-import se.miun.ordernow.model.MenuList;
 import se.miun.ordernow.view.FloorActivity;
 import se.miun.ordernow.view.KitchenMenuActivity;
 
-public class MainActivity2 extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
+    private static Context context;
     Button chooseFloorBTN;
     Button chooseKitchenBTN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        context = getApplicationContext();
+        setContentView(R.layout.activity_main);
 
         // Start background thread to receive notifications from kitchen.
         BackgroundApiFetcher updater = new BackgroundApiFetcher();
@@ -37,7 +33,7 @@ public class MainActivity2 extends AppCompatActivity {
         chooseFloorBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity2.this, FloorActivity.class);
+                Intent intent = new Intent(MainActivity.this, FloorActivity.class);
                 startActivity(intent);
             }
         });
@@ -45,9 +41,13 @@ public class MainActivity2 extends AppCompatActivity {
         chooseKitchenBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity2.this, KitchenMenuActivity.class);
+                Intent intent = new Intent(MainActivity.this, KitchenMenuActivity.class);
                 startActivity(intent);
             }
         });
+    }
+
+    public static Context getContext() {
+        return context;
     }
 }

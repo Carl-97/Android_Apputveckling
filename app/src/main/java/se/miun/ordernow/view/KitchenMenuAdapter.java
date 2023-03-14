@@ -7,24 +7,26 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import se.miun.ordernow.R;
+import se.miun.ordernow.model.KitchenOrderList;
 import se.miun.ordernow.model.Order;
 import se.miun.ordernow.model.OrderItem;
 
 public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.MyViewHolder> {
-    private List<Order> orderList;
+    private KitchenOrderList orderList;
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     private RecyclerViewClickListener listener;
-    public KitchenMenuAdapter(List<Order> orderList, RecyclerViewClickListener listener){
+    public KitchenMenuAdapter(KitchenOrderList orderList, RecyclerViewClickListener listener){
         this.orderList = orderList;
         this.listener =listener;
     }
-    public KitchenMenuAdapter(List<Order> orderList){
+    public KitchenMenuAdapter(KitchenOrderList orderList){
         this.orderList = orderList;
     }
     public interface RecyclerViewClickListener{
@@ -32,25 +34,14 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        private TextView orderNumber;
         private TextView tableNumber;
         private RecyclerView itemsList;
-        private Button cancelButton;
 
         public MyViewHolder(final View view){
             super(view);
-            orderNumber = view.findViewById(R.id.orderNumbertextView);
             tableNumber = view.findViewById(R.id.tableNumberTextView);
             itemsList = view.findViewById(R.id.orderItemsRecyclerView);
-            cancelButton = view.findViewById(R.id.OrderCancelButton);
-
-            view.findViewById(R.id.OrderCancelButton).setOnClickListener(view1 -> {
-                orderList.remove(getAbsoluteAdapterPosition());
-                notifyItemRemoved(getAbsoluteAdapterPosition());
-            });
         }
-
-
     }
     @NonNull
     @Override
@@ -61,12 +52,10 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull KitchenMenuAdapter.MyViewHolder holder, int position) {
-        String orderNumber = String.valueOf(orderList.get(position).getOrderNumber());
-        holder.orderNumber.setText("Order: " + orderNumber);
+        Order order = orderList.getOrder(position);
 
-        Order order = orderList.get(position);
-        String tableNumber = String.valueOf(orderList.get(position).getTable().getTableId());
-        holder.tableNumber.setText("Table: " + tableNumber);
+        String tableNumber = String.valueOf(order.getTable().getTableId());
+        holder.tableNumber.setText("Table " + tableNumber);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 holder.itemsList.getContext(),
@@ -75,27 +64,19 @@ public class KitchenMenuAdapter extends RecyclerView.Adapter<KitchenMenuAdapter.
         );
         layoutManager.setInitialPrefetchItemCount(order.getItems().size());
 
-        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(order.getItems());
-        System.out.println("Order size: " + order.getItems().size());
-        for(OrderItem item: order.getItems()) {
-            item.print();
-        }
+        System.out.println("Binding order: " + order.getTable().getTableId());
+        System.out.println("On position: " + position);
 
+        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(order.getItems(), order.getTable().getTableId());
 
         holder.itemsList.setLayoutManager(layoutManager);
         holder.itemsList.setAdapter(orderItemAdapter);
         holder.itemsList.setRecycledViewPool(viewPool);
-
-
-
-
+        holder.itemsList.addItemDecoration(new DividerItemDecoration(holder.itemsList.getContext(),DividerItemDecoration.VERTICAL));
     }
 
     @Override
     public int getItemCount() {
         return orderList.size();
     }
-
-
-
 }
