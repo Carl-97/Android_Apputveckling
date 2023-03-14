@@ -22,7 +22,7 @@ public class OrderItem {
     @SerializedName("note")
     private String description;
 
-    @SerializedName("cooked")
+    @SerializedName("ready")
     private boolean hasBeenCooked = false;
 
     @SerializedName("itemsByItemFk")
